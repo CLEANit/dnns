@@ -1,0 +1,17 @@
+# the number of epochs to run
+n_epochs: 50
+
+# batch size of images
+batch_size: 64
+
+# learning rate for model
+learning_rate: 0.01
+
+# number of threads to use for data queuing
+n_workers: 12
+
+# labels in the HDF5 files
+x_label: 'X'
+y_label: 'Y'
+
+

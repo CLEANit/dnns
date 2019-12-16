@@ -6,6 +6,7 @@ import logging
 import numpy as np
 import time
 
+
 class HDF5Dataset(torch.utils.data.Dataset):
     def __init__(self, filename, x_label, y_label):
         super(HDF5Dataset, self).__init__()
