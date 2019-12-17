@@ -10,9 +10,9 @@ from apex.parallel import DistributedDataParallel as DDP
 from apex import amp
 
 # locals
-from loader import Loader
-from data import Data
-from config import Config
+from dnns.loader import Loader
+from dnns.data import Data
+from dnns.config import Config
 
 
 def getDNN(loader):
