@@ -16,7 +16,22 @@ from apex import amp
 
 # locals
 from loader import Loader
-from data import Data, DataFetcher
+from data import Data
+from config import Config
+
+def train(gpu_num, model):
+
+    args = model.args
+    config = model.config
+    loader = model.loader
+    rank = args.local_rank * config['gpus'] + gpu
+    print('Hello from rank:', rank)
+
+
+
+    # data = Data(loader, config)
+
+    # dnn = model.getDNN()
 
 
 
@@ -38,23 +53,18 @@ class Model:
         '''
         Step 1: Read in all of the configuration. This will come from argparse and YAML
         '''
-        self.config = Config(self.parser)
+        self.Conf = Config()
+        self.args = self.Conf.getArgs()
+        self.config = self.Conf.getConfig()
 
-        # '''
-        # Step 2: Load HDF5 data from train and test directories.
-        # '''
-        # self.loader = Loader(self.parser, self.config)
-        # self.data = Data(self.loader, self.config)
-        # self.train_fetcher = DataFetcher(self.data.getTrainingSet())
-        # self.test_fetcher = DataFetcher(self.data.getTestingSet())
+        '''
+        Step 2: Load HDF5 data from train and test directories.
+        '''
+        self.loader = Loader(self.args, self.config)
 
-        # '''
-        # Step 3: Load in the network
-        # '''
-        # self.dnn = self.getDNN()
 
 
     def train(self):
-        pass
+        mp.spawn(train, nprocs=self.config['gpus'], args=(self,))
 
 

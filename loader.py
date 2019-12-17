@@ -11,7 +11,7 @@ class Loader():
         start = time.time()
         self.parser = parser
         self.config = config
-        print('Initializing Loader...', end='')
+        # print('Initializing Loader...', end='')
         self.mapping = {}
 
         # get the training files
@@ -22,7 +22,7 @@ class Loader():
         self.test_files = self.readDir(os.getcwd() + '/test')
         self.test_h5_files = self.prepareData(self.test_files, test=True)
 
-        print('done. (%5.5f s.)' % (time.time() - start))
+        # print('done. (%5.5f s.)' % (time.time() - start))
 
     def readDir(self, dir_name):
         if os.path.isdir(dir_name):
