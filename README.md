@@ -48,4 +48,59 @@ y_label: 'output_data'
 
 mixed_precision: false
 ```
-Here we have defined the number of epochs, batch size, learning rate, the number of worker threads, dataset labels, and we have turned mixed precision off.
+Here we have defined the number of epochs, batch size, learning rate, the number of worker threads, dataset labels, and we have turned mixed precision off. Now let's look at `dnn.py`. 
+```
+~some_dir $ more dnn.py
+import torch
+import torch.nn as nn
+import numpy as np
+from collections import OrderedDict
+
+class DNN(nn.Module):
+
+    def __init__(self, input_shape):
+        super().__init__()
+        layers = OrderedDict()
+        layers['conv_red_1'] = nn.Conv3d(1, 64, 5, padding=2, stride=2)
+        layers['conv_red_1_elu'] = nn.ELU()
+        layers['conv_red_2'] = nn.Conv3d(64, 64, 5, padding=2, stride=1)
+        layers['conv_red_2_elu'] = nn.ELU()
+	
+        layers['conv_nonred_3'] = nn.Conv3d(64, 16, 5, padding=2)
+        layers['conv_nonred_3_elu'] = nn.ELU()
+        for i in range(4, 9):
+            layers['conv_nonred_' + str(i)] = nn.Conv3d(16, 16, 5, padding=2)
+            layers['conv_nonred_' + str(i) + '_elu'] = nn.ELU()
+
+        layers['conv_red_3'] = nn.Conv3d(16, 64, 5, padding=2, stride=1)
+        layers['conv_red_3_elu'] = nn.ELU()
+
+        layers['conv_nonred_9'] = nn.Conv3d(64, 32, 5, padding=2, stride=1)
+        layers['conv_red_9_elu'] = nn.ELU()
+        for i in range(10, 14):
+            layers['conv_nonred_' + str(i)] = nn.Conv3d(32, 32, 5, padding=2)
+            layers['conv_nonred_' + str(i) + '_elu'] = nn.ELU()
+        
+        layers['flatten'] = nn.Flatten()
+        layers['fc1'] = nn.Linear((input_shape[0] //2 + 1) * (input_shape[1] //2 + 1) * (input_shape[2] //2 + 1) * input_shape[3] * 32, 1024 )
+        layers['fc1_relu'] = nn.ELU()
+        layers['fc2'] = nn.Linear(1024, 1)
+        self.model = nn.Sequential(layers)
+
+
+    def forward(self, x):
+        x = x.reshape(x.shape[0], x.shape[-1], x.shape[1], x.shape[2], x.shape[3])  
+        return self.model(x)
+```
+With these defined you can simply run:
+```
+python -m torch.distributed.launch -nnodes <n_nodes> --nproc_per_node <n_gpus_per_node> worker.py
+```
+Afterwards a checkpoint file `checkpoint.torch`, and a data file `loss_vs_epoch.dat` is created. 
+
+## Limitations
+1) Currently, you can only have one HDF5 file for training/testing.
+2) There has not been a lot of testing of this repo. I expect there will be critical issues that must be taken care of in future releases.
+
+## Contact
+Please contact me at `kryczko@uottawa.ca` for any issues.
