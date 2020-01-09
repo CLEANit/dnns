@@ -20,14 +20,14 @@ class HDF5Dataset(torch.utils.data.Dataset):
 
     def checkDataSize(self):
         # print('Rank', self.rank,'Trying to load dataset (' + self.filename + ') into memory...', end='')
-        try:
-            self.X = self.h5_file[self.x_label][:]
-            self.Y = self.h5_file[self.y_label][:]
+        #try:
+        #    self.X = self.h5_file[self.x_label][:]
+        #    self.Y = self.h5_file[self.y_label][:]
             # print('successful.')
-        except:
+        # except:
             # print('unsuccessful. Dataset is too large to fit in memory.')
-            self.X = self.h5_file[self.x_label]
-            self.Y = self.h5_file[self.y_label]
+        self.X = self.h5_file[self.x_label]
+        self.Y = self.h5_file[self.y_label]
 
     def __getitem__(self, index):
         item_x, item_y = self.X[index], self.Y[index]
