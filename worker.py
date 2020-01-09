@@ -94,7 +94,7 @@ def validate(testing_set, model, loss_fn, args, epoch):
             val_loss = loss.data
         val_counter += 1
 
-        dist.all_reduce(outputs)
+        outputs = reduce_tensor(outputs)
 
         if args.local_rank == 0:
             for elem_t, elem_p in zip(labels, outputs):
@@ -105,7 +105,7 @@ def validate(testing_set, model, loss_fn, args, epoch):
     if args.local_rank == 0:
         f.close()
 
-    return val_loss / val_counter, 
+    return val_loss / val_counter
 
 def reduce_tensor(tensor):
     rt = tensor.clone()
