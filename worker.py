@@ -174,7 +174,7 @@ def main():
     for epoch in range(start_epoch, config['n_epochs']):
         start = time.time()
         training_loss = train(training_set, model, optimizer, loss_fn, args, config)
-        validation_loss = validate(testing_set, model, loss_fn, args)
+        validation_loss = validate(testing_set, model, loss_fn, args, epoch)
         if args.local_rank == 0:
             print('epoch: %3.0i | training loss: %0.3e | validation loss: %0.3e | time(s): %0.3e' %
                       (epoch + 1, training_loss, validation_loss, time.time() - start))
