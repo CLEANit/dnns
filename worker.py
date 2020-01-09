@@ -94,7 +94,7 @@ def validate(testing_set, model, loss_fn, args, epoch):
             val_loss = loss.data
         val_counter += 1
 
-        outputs = reduce_tensor(outputs)
+        # outputs = reduce_tensor(outputs)
 
         if args.local_rank == 0:
             for elem_t, elem_p in zip(labels, outputs):
