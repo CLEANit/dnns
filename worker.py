@@ -99,8 +99,8 @@ def validate(testing_set, model, loss_fn, args, epoch):
         if args.local_rank == 0:
             for elem_t, elem_p in zip(labels, outputs):
                 for t, p in zip(elem_t.data.cpu().numpy(), elem_p.data.cpu().numpy()):
-                f.write('%1.20e\t%1.20e\t' %(t, p))
-            f.write('\n')
+                    f.write('%1.20e\t%1.20e\t' %(t, p))
+                f.write('\n')
 
     if args.local_rank == 0:
         f.close()
