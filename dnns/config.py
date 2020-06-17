@@ -24,6 +24,9 @@ class Config:
         self.config['output_label'] = 'Y'
         self.config['model'] = 'dnn.py'
         self.config['mixed_precision'] = True
+        self.config['twin'] = False
+        self.config['n_training_samples'] = 0
+        self.config['n_testing_samples'] = 0
 
     def parseArgs(self):
         parser = argparse.ArgumentParser(description='Machine learning with Pytorch. Change dnn.py and your YAML input file to modify training.')

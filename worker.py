@@ -155,7 +155,11 @@ def main():
 
     # get data
     loader = Loader(args, config)
-    data = Data(loader, config, args)
+    if config['twin']:
+        data = TwinData(loader, config, args)
+    else:
+        data = Data(loader, config, args)
+
     training_set = data.getTrainingData()
     testing_set = data.getTestingData()
 
