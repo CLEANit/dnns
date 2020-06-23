@@ -11,7 +11,7 @@ from apex import amp
 
 # locals
 from dnns.loader import Loader
-from dnns.data import Data
+from dnns.data import Data, TwinData
 from dnns.config import Config
 
 
@@ -26,7 +26,7 @@ def getDNN(loader):
     return DNN(loader.getXShape())
 
 def getModel(loader, config, args):
-    model = getDNN(loader).cuda()
+    model = getDNN(loader).cuda(args.local_rank)
     optimizer = torch.optim.Adam(model.parameters(), lr=config['learning_rate'])
 
     if config['mixed_precision']:
@@ -69,7 +69,7 @@ def train(training_set, model, optimizer, loss_fn, args, config):
         epoch_loss += current_loss
         counter += 1
         # batch += 1
-        if args.local_rank == 0:
+        if args.rank == 0:
             print('batch: %3.0i | current_loss: %0.3e | time: %0.3e' % (i, current_loss, time.time() - start)) 
             sys.stdout.flush()
 
@@ -79,7 +79,7 @@ def validate(testing_set, model, loss_fn, args, epoch):
     model.eval()
     val_loss = 0
     val_counter = 0
-    if args.local_rank == 0:
+    if args.rank == 0:
         f = open('true_vs_pred_epoch_%04d.dat' % (epoch), 'w')
 
     for data in testing_set:
@@ -96,20 +96,20 @@ def validate(testing_set, model, loss_fn, args, epoch):
 
         # outputs = reduce_tensor(outputs)
 
-        if args.local_rank == 0:
+        if args.rank == 0:
             for elem_t, elem_p in zip(labels, outputs):
                 for t, p in zip(elem_t.data.cpu().numpy(), elem_p.data.cpu().numpy()):
                     f.write('%1.20e\t%1.20e\t' %(t, p))
                 f.write('\n')
 
-    if args.local_rank == 0:
+    if args.rank == 0:
         f.close()
 
     return val_loss / val_counter
 
 def reduce_tensor(tensor):
     rt = tensor.clone()
-    dist.all_reduce(rt, op=dist.ReduceOp.SUM)
+    dist.all_reduce(rt)
     rt /= int(os.environ['WORLD_SIZE'])
     return rt
 
@@ -124,10 +124,10 @@ def tryToResume(model, optimizer, checkpoint_path, args):
 
     try:
         checkpoint = torch.load(checkpoint_path, map_location = lambda storage, loc: storage.cuda(args.local_rank))
-        if args.local_rank == 0:
+        if args.rank == 0:
             print('The checkpoint was loaded successfully. Continuing training.')
     except FileNotFoundError:
-        if args.local_rank == 0:
+        if args.rank == 0:
             print('There was no checkpoint found. Training from scratch.')
         checkpoint = None
 
@@ -152,7 +152,10 @@ def main():
     config = Conf.getConfig()
     args = Conf.getArgs()
     args.world_size = int(os.environ['WORLD_SIZE'])
-
+    args.rank = args.node_rank * args.gpus_per_node + args.local_rank 
+    if args.rank == 0:
+       print('World size:', args.world_size) 
+       Conf.printConfig()
     # get data
     loader = Loader(args, config)
     if config['twin']:
@@ -168,7 +171,7 @@ def main():
         torch.cuda.set_device(args.local_rank)
         torch.distributed.init_process_group(backend='nccl',
                                              init_method='env://')
-
+        
     model, optimizer, loss_fn = getModel(loader, config, args)
 
     checkpoint_path ='./checkpoint.torch'
@@ -177,9 +180,11 @@ def main():
 
     for epoch in range(start_epoch, config['n_epochs']):
         start = time.time()
+        data.train_sampler.set_epoch(epoch)
+        
         training_loss = train(training_set, model, optimizer, loss_fn, args, config)
         validation_loss = validate(testing_set, model, loss_fn, args, epoch)
-        if args.local_rank == 0:
+        if args.rank == 0:
             print('epoch: %3.0i | training loss: %0.3e | validation loss: %0.3e | time(s): %0.3e' %
                       (epoch + 1, training_loss, validation_loss, time.time() - start))
             loss_vs_epoch.write('%10.20e\t%10.20e\t%10.20e\t%10.20e\n' % (epoch + 1, training_loss, validation_loss, time.time() - start))

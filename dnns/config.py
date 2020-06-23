@@ -17,7 +17,6 @@ class Config:
     def defaultConfig(self):
         self.config = {}
         self.config['cpus_per_task'] = 1
-        self.config['epochs'] = 10
         self.config['batch_size'] = 128
         self.config['learning_rate'] = 1e-3
         self.config['input_label'] = 'X'
@@ -32,6 +31,8 @@ class Config:
         parser = argparse.ArgumentParser(description='Machine learning with Pytorch. Change dnn.py and your YAML input file to modify training.')
         parser.add_argument('-lr', '--local_rank', default=0, type=int,
                             help='ranking within the nodes')
+        parser.add_argument('-nr', '--node_rank', default=0, type=int, help='Node number')
+        parser.add_argument('-ng', '--gpus_per_node', default=1, type=int, help='Number of GPUs on node.')
         parser.add_argument('-i', '--input', default='input.yaml', type=str)
         self.args = parser.parse_args()
 

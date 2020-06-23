@@ -54,8 +54,8 @@ class Loader():
         self.filenames = filenames
 
         for i, h5file in enumerate(h5_files):
-            x_shape = h5file[self.config['x_label']].shape
-            y_shape = h5file[self.config['y_label']].shape
+            x_shape = h5file[self.config['input_label']].shape
+            y_shape = h5file[self.config['output_label']].shape
             
             if x_shape[0] != y_shape[0]:
                 print('The datasets X and Y must have the same length!')
@@ -65,12 +65,12 @@ class Loader():
                 self.image_counts[filenames[i]] = y_shape[0]
                 self.total += y_shape[0]
 
-            min_y = np.min(h5file[self.config['y_label']])
+            min_y = np.min(h5file[self.config['output_label']])
             
             if min_y < self.min:
                 self.min = min_y
 
-            max_y = np.max(h5file[self.config['y_label']])
+            max_y = np.max(h5file[self.config['output_label']])
             if max_y > self.max:
                 self.max = max_y
 
