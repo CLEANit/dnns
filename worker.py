@@ -15,18 +15,20 @@ from dnns.data import Data, TwinData
 from dnns.config import Config
 
 
-def getDNN(loader):
+def getDNN(loader, args):
     sys.path.insert(1, os.getcwd())
     try:
         from dnn import DNN
-        # print('Successfully imported your model.')
+        if args.rank == 0:
+            print('Successfully imported your model.')
     except:
-        # print('Could not import your model. Exiting.')
+        if args.rank == 0:
+            print('Could not import your model. Exiting.')
         exit(-1)
     return DNN(loader.getXShape())
 
 def getModel(loader, config, args):
-    model = getDNN(loader).cuda(args.local_rank)
+    model = getDNN(loader, args).cuda(args.local_rank)
     optimizer = torch.optim.Adam(model.parameters(), lr=config['learning_rate'])
 
     if config['mixed_precision']:
@@ -80,7 +82,7 @@ def validate(testing_set, model, loss_fn, args, epoch):
     val_loss = 0
     val_counter = 0
     if args.rank == 0:
-        f = open('true_vs_pred_epoch_%04d.dat' % (epoch), 'w')
+        f = open('true_vs_pred_epoch_%04d.dat' % (epoch + 1), 'w')
 
     for data in testing_set:
         inputs, labels = data
@@ -115,8 +117,8 @@ def reduce_tensor(tensor):
 
 def checkpoint(epoch, model, optimizer, checkpoint_path):
     torch.save({
-        'epoch' : epoch,
-        'model_state_dict' : model.state_dict(),
+        'epoch' : epoch + 1,
+        'model_state_dict' : model.module.state_dict(),
         'optimizer_state_dict' : optimizer.state_dict()
     }, checkpoint_path)
 
@@ -137,7 +139,7 @@ def tryToResume(model, optimizer, checkpoint_path, args):
         # loss_vs_batch = open('loss_vs_batch.dat', 'w')
         loss_vs_epoch = open('loss_vs_epoch.dat', 'w')
     else:
-        model.load_state_dict((checkpoint['model_state_dict']))
+        model.module.load_state_dict((checkpoint['model_state_dict']))
         optimizer.load_state_dict((checkpoint['optimizer_state_dict']))
         start_epoch = checkpoint['epoch']
         # batch = int(np.loadtxt('loss_vs_batch.dat')[-1][0])
@@ -170,7 +172,7 @@ def main():
     if args.world_size > 1:
         torch.cuda.set_device(args.local_rank)
         torch.distributed.init_process_group(backend='nccl',
-                                             init_method='env://')
+                                             init_method='env://', rank=args.rank)
         
     model, optimizer, loss_fn = getModel(loader, config, args)
 

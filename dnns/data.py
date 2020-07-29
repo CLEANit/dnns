@@ -45,8 +45,8 @@ class TwinHDF5Dataset(torch.utils.data.Dataset):
         self.rank = rank
         self.h5_file = h5py.File(filename, 'r')
         self.max_len = self.h5_file[x_label].shape[0]
-        self.length = self.max_len**2
-        self.indices = np.indices((self.max_len, self.max_len)).T.reshape(self.length, 2)
+        self.length = self.max_len // 2
+        # self.indices = np.indices((self.max_len, self.max_len)).T.reshape(self.length, 2)
         self.checkDataSize()
 
     def checkDataSize(self):
@@ -61,10 +61,8 @@ class TwinHDF5Dataset(torch.utils.data.Dataset):
         self.Y = self.h5_file[self.y_label]
 
     def __getitem__(self, index):
-        index1 = self.indices[index][0]
-        index2 = self.indices[index][1]
-        item_x1, item_y1 = self.X[index1], self.Y[index1]
-        item_x2, item_y2 = self.X[index2], self.Y[index2]
+        item_x1, item_y1 = self.X[2*index], self.Y[2*index]
+        item_x2, item_y2 = self.X[2*index + 1 ], self.Y[2*index + 1]
         return np.array([item_x1.astype('float32'), item_x2.astype('float32')]), item_y1.astype('float32') - item_y2.astype('float32')
 
 
