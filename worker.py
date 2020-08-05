@@ -82,7 +82,7 @@ def validate(testing_set, model, loss_fn, args, epoch):
     val_loss = 0
     val_counter = 0
     if args.rank == 0:
-        f = open('true_vs_pred_epoch_%04d.dat' % (epoch + 1), 'w')
+        f = open('true_vs_pred_epoch_%04d.dat' % (epoch), 'w')
 
     for data in testing_set:
         inputs, labels = data
@@ -115,12 +115,19 @@ def reduce_tensor(tensor):
     rt /= int(os.environ['WORLD_SIZE'])
     return rt
 
-def checkpoint(epoch, model, optimizer, checkpoint_path):
-    torch.save({
-        'epoch' : epoch + 1,
-        'model_state_dict' : model.module.state_dict(),
-        'optimizer_state_dict' : optimizer.state_dict()
-    }, checkpoint_path)
+def checkpoint(epoch, model, optimizer, checkpoint_path, world_size=1):
+    if world_size > 1:
+        torch.save({
+            'epoch' : epoch,
+            'model_state_dict' : model.module.state_dict(),
+            'optimizer_state_dict' : optimizer.state_dict()
+        }, checkpoint_path)
+    else:
+        torch.save({
+            'epoch' : epoch,
+            'model_state_dict' : model.state_dict(),
+            'optimizer_state_dict' : optimizer.state_dict()
+        }, checkpoint_path)
 
 def tryToResume(model, optimizer, checkpoint_path, args):
 
@@ -134,7 +141,7 @@ def tryToResume(model, optimizer, checkpoint_path, args):
         checkpoint = None
 
     if checkpoint is None:
-        start_epoch = 0
+        start_epoch = 1
         # batch = 0
         # loss_vs_batch = open('loss_vs_batch.dat', 'w')
         loss_vs_epoch = open('loss_vs_epoch.dat', 'w')
@@ -180,7 +187,7 @@ def main():
 
     model, optimizer, start_epoch, loss_vs_epoch = tryToResume(model, optimizer, checkpoint_path, args)
 
-    for epoch in range(start_epoch, config['n_epochs']):
+    for epoch in range(start_epoch, config['n_epochs'] + 1):
         start = time.time()
         data.train_sampler.set_epoch(epoch)
         
@@ -188,10 +195,10 @@ def main():
         validation_loss = validate(testing_set, model, loss_fn, args, epoch)
         if args.rank == 0:
             print('epoch: %3.0i | training loss: %0.3e | validation loss: %0.3e | time(s): %0.3e' %
-                      (epoch + 1, training_loss, validation_loss, time.time() - start))
-            loss_vs_epoch.write('%10.20e\t%10.20e\t%10.20e\t%10.20e\n' % (epoch + 1, training_loss, validation_loss, time.time() - start))
+                      (epoch, training_loss, validation_loss, time.time() - start))
+            loss_vs_epoch.write('%10.20e\t%10.20e\t%10.20e\t%10.20e\n' % (epoch, training_loss, validation_loss, time.time() - start))
             loss_vs_epoch.flush()
-            checkpoint(epoch, model, optimizer, checkpoint_path)
+            checkpoint(epoch, model, optimizer, checkpoint_path, world_size=args.world_size)
 
 if __name__ == '__main__':
     main()
