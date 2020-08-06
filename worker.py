@@ -146,7 +146,10 @@ def tryToResume(model, optimizer, checkpoint_path, args):
         # loss_vs_batch = open('loss_vs_batch.dat', 'w')
         loss_vs_epoch = open('loss_vs_epoch.dat', 'w')
     else:
-        model.module.load_state_dict((checkpoint['model_state_dict']))
+        if args.world_size > 1:
+            model.module.load_state_dict((checkpoint['model_state_dict']))
+        else:
+            model.load_state_dict((checkpoint['model_state_dict']))
         optimizer.load_state_dict((checkpoint['optimizer_state_dict']))
         start_epoch = checkpoint['epoch']
         # batch = int(np.loadtxt('loss_vs_batch.dat')[-1][0])
