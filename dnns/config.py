@@ -34,6 +34,7 @@ class Config:
         parser.add_argument('-nr', '--node_rank', default=0, type=int, help='Node number')
         parser.add_argument('-ng', '--gpus_per_node', default=1, type=int, help='Number of GPUs on node.')
         parser.add_argument('-i', '--input', default='input.yaml', type=str)
+        parser.add_argument('-cp','--checkpoint_path', default='./', type=str )
         self.args = parser.parse_args()
 
     def parseConfig(self):
