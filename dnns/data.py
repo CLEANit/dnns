@@ -8,12 +8,13 @@ import time
 
 
 class HDF5Dataset(torch.utils.data.Dataset):
-    def __init__(self, filename, x_label, y_label, rank):
+    def __init__(self, filename, x_label, y_label, rank, use_hist=False):
         super(HDF5Dataset, self).__init__()
         self.filename = filename
         self.x_label = x_label
         self.y_label = y_label
         self.rank = rank
+        self.use_hist = use_hist
         self.h5_file = h5py.File(filename, 'r')
         self.length = self.h5_file[x_label].shape[0]
         self.checkDataSize()
@@ -26,19 +27,33 @@ class HDF5Dataset(torch.utils.data.Dataset):
             # print('successful.')
         # except:
             # print('unsuccessful. Dataset is too large to fit in memory.')
+
         max_size = 32 * 1e9 # roughly 32 GB
         if np.prod(self.h5_file[self.x_label].shape) * 8 >  max_size:
             if self.rank == 0:
-                print('Data size is too large (> 32 GB), will read from disk.')
+                print('Data from file' + self.filename + 'is too large (> 32 GB), will read from disk on the fly.')
             self.X = self.h5_file[self.x_label]
             self.Y = self.h5_file[self.y_label]
         else:
             if self.rank == 0:
-                print('Loading data into memory.')
+                print('Loading file' + self.filename + 'into memory.')
             self.X = self.h5_file[self.x_label][:]
             self.Y = self.h5_file[self.y_label][:]
 
+        if self.use_hist:
+            n_bins = 256
+            self.hist, self.bins = np.histogram(self.Y, bins=n_bins, density=True)
+            self.hist_indices = np.arange(self.hist.shape[0])
+            self.hist /= n_bins 
+            self.distro = 1 - self.hist
+            self.distro /= self.distro.sum()
+
     def __getitem__(self, index):
+        if self.use_hist:
+            bin_select = np.random.choice(self.hist_indices, p=self.distro)
+            left = self.bins[bin_select]
+            right = self.bins[bin_select + 1]
+            index = np.random.choice(np.argwhere(np.logical_and(f['Y'] > left, f['Y'] <= right)))
         item_x, item_y = self.X[index], self.Y[index]
         return torch.from_numpy(item_x.astype('float32')), torch.from_numpy(item_y.astype('float32'))
 
@@ -157,19 +172,22 @@ class Data:
         self.loader = loader
         self.config = config
         self.args = args
+        self.use_hist = use_hist
 
         self.training_dataset = HDF5Dataset(
             self.loader.getTrainingFiles()[0],
             self.config['input_label'],
             self.config['output_label'],
-            self.args.local_rank
+            self.args.local_rank,
+            use_hist=self.config['use_hist']
         )
 
         self.testing_dataset = HDF5Dataset(
             self.loader.getTestingFiles()[0],
             self.config['input_label'],
             self.config['output_label'],
-            self.args.local_rank
+            self.args.local_rank,
+            use_hist=False
         )
 
         self.train_sampler = torch.utils.data.distributed.DistributedSampler(
