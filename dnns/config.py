@@ -26,6 +26,7 @@ class Config:
         self.config['twin'] = False
         self.config['n_training_samples'] = 0
         self.config['n_testing_samples'] = 0
+        self.config['use_hist'] = False
 
     def parseArgs(self):
         parser = argparse.ArgumentParser(description='Machine learning with Pytorch. Change dnn.py and your YAML input file to modify training.')
