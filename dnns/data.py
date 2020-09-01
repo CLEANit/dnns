@@ -54,7 +54,7 @@ class TwinHDF5Dataset(torch.utils.data.Dataset):
         self.rank = rank
         self.h5_file = h5py.File(filename, 'r')
         self.max_len = self.h5_file[x_label].shape[0]
-        self.length = self.max_len ** 2
+        self.length = n_samples
         # self.indices = np.indices((self.max_len, self.max_len)).T.reshape(self.length, 2)
         self.checkDataSize()
 
