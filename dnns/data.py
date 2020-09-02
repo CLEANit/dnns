@@ -172,7 +172,6 @@ class Data:
         self.loader = loader
         self.config = config
         self.args = args
-        self.use_hist = use_hist
 
         self.training_dataset = HDF5Dataset(
             self.loader.getTrainingFiles()[0],
