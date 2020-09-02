@@ -28,7 +28,7 @@ class HDF5Dataset(torch.utils.data.Dataset):
         # except:
             # print('unsuccessful. Dataset is too large to fit in memory.')
 
-        max_size = 64 * 1e9 # roughly 64 GB
+        max_size = 32 * 1e9 # roughly 32 GB
         if np.prod(self.h5_file[self.x_label].shape) * 8 >  max_size:
             if self.rank == 0:
                 print('Data from file' + self.filename + 'is too large (> 32 GB), will read from disk on the fly.')
