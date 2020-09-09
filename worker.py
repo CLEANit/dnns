@@ -226,7 +226,7 @@ def main():
             checkpoint(epoch, model, optimizer, checkpoint_path, best_val, world_size=args.world_size)
 
             if validation_loss < best_val:
-                print('Better validation loss was found, checkpointing to' + checkpoint_path + 'best_checkpoint.torch')
+                print('Better validation loss was found, checkpointing to ' + checkpoint_path + 'best_checkpoint.torch')
                 best_val = validation_loss
                 checkpoint(epoch, model, optimizer, checkpoint_path, best_val, world_size=args.world_size, best=True)
 

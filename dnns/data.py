@@ -172,13 +172,12 @@ class Data:
         self.loader = loader
         self.config = config
         self.args = args
-        self.use_hist = use_hist
 
         self.training_dataset = HDF5Dataset(
             self.loader.getTrainingFiles()[0],
             self.config['input_label'],
             self.config['output_label'],
-            self.args.local_rank,
+            self.args.rank,
             use_hist=self.config['use_hist']
         )
 
@@ -186,7 +185,7 @@ class Data:
             self.loader.getTestingFiles()[0],
             self.config['input_label'],
             self.config['output_label'],
-            self.args.local_rank,
+            self.args.rank,
             use_hist=False
         )
 
