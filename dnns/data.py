@@ -109,7 +109,7 @@ class TwinHDF5Dataset(torch.utils.data.Dataset):
             bin_select = np.random.choice(self.hist_indices, p=self.distro)
             left = self.bins[bin_select]
             right = self.bins[bin_select + 1]
-            index = np.random.choice(np.argwhere(np.logical_and(self.diffs['Y'] > left, self.diffs['Y'] <= right)))
+            index = np.random.choice(np.argwhere(np.logical_and(self.diffs > left, self.diffs <= right)))
             index1, index2 = self.indices[index, 0], self.indices[index, 1]
         else:
             index1 = np.random.randint(self.max_len)
