@@ -61,7 +61,7 @@ class HDF5Dataset(torch.utils.data.Dataset):
         return self.length
 
 class TwinHDF5Dataset(torch.utils.data.Dataset):
-    def __init__(self, filename, x_label, y_label, n_samples, rank):
+    def __init__(self, filename, x_label, y_label, n_samples, rank, use_hist=False):
         super(TwinHDF5Dataset, self).__init__()
         self.filename = filename
         self.x_label = x_label
@@ -70,6 +70,7 @@ class TwinHDF5Dataset(torch.utils.data.Dataset):
         self.h5_file = h5py.File(filename, 'r')
         self.max_len = self.h5_file[x_label].shape[0]
         self.length = n_samples
+        self.use_hist = use_hist
         # self.indices = np.indices((self.max_len, self.max_len)).T.reshape(self.length, 2)
         self.checkDataSize()
 
@@ -77,7 +78,7 @@ class TwinHDF5Dataset(torch.utils.data.Dataset):
         max_size = 32 * 1e9 # roughly 32 GB
         if np.prod(self.h5_file[self.x_label].shape) * 8 >  max_size:
             if self.rank == 0:
-                print('Data from file ' + self.filename + ' is too large (> 32 GB), will read from disk on the fly.')            self.X = self.h5_file[self.x_label]
+                print('Data from file ' + self.filename + ' is too large (> 32 GB), will read from disk on the fly.')
             self.X = self.h5_file[self.x_label]
             self.Y = self.h5_file[self.y_label]
         else:
@@ -132,7 +133,8 @@ class TwinData:
             self.config['input_label'],
             self.config['output_label'],
             self.config['n_training_samples'],
-            self.args.local_rank
+            self.args.local_rank,
+            use_hist=self.config['use_hist']
         )
 
         self.testing_dataset = TwinHDF5Dataset(
