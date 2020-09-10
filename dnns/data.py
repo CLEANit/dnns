@@ -78,6 +78,7 @@ class TwinHDF5Dataset(torch.utils.data.Dataset):
         if np.prod(self.h5_file[self.x_label].shape) * 8 >  max_size:
             if self.rank == 0:
                 print('Data from file ' + self.filename + ' is too large (> 32 GB), will read from disk on the fly.')            self.X = self.h5_file[self.x_label]
+            self.X = self.h5_file[self.x_label]
             self.Y = self.h5_file[self.y_label]
         else:
             if self.rank == 0:
