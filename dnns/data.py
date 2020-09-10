@@ -31,12 +31,12 @@ class HDF5Dataset(torch.utils.data.Dataset):
         max_size = 32 * 1e9 # roughly 32 GB
         if np.prod(self.h5_file[self.x_label].shape) * 8 >  max_size:
             if self.rank == 0:
-                print('Data from file' + self.filename + 'is too large (> 32 GB), will read from disk on the fly.')
+                print('Data from file ' + self.filename + ' is too large (> 32 GB), will read from disk on the fly.')
             self.X = self.h5_file[self.x_label]
             self.Y = self.h5_file[self.y_label]
         else:
             if self.rank == 0:
-                print('Loading file' + self.filename + 'into memory.')
+                print('Loading file ' + self.filename + ' into memory.')
             self.X = self.h5_file[self.x_label][:]
             self.Y = self.h5_file[self.y_label][:]
 
@@ -53,7 +53,7 @@ class HDF5Dataset(torch.utils.data.Dataset):
             bin_select = np.random.choice(self.hist_indices, p=self.distro)
             left = self.bins[bin_select]
             right = self.bins[bin_select + 1]
-            index = np.random.choice(np.argwhere(np.logical_and(f['Y'] > left, f['Y'] <= right)))
+            index = np.random.choice(np.argwhere(np.logical_and(self.f['Y'] > left, self.f['Y'] <= right)))
         item_x, item_y = self.X[index], self.Y[index]
         return torch.from_numpy(item_x.astype('float32')), torch.from_numpy(item_y.astype('float32'))
 
@@ -77,18 +77,41 @@ class TwinHDF5Dataset(torch.utils.data.Dataset):
         max_size = 32 * 1e9 # roughly 32 GB
         if np.prod(self.h5_file[self.x_label].shape) * 8 >  max_size:
             if self.rank == 0:
-                print('Data size is too large (> 32 GB), will read from disk.')
-            self.X = self.h5_file[self.x_label]
+                print('Data from file ' + self.filename + ' is too large (> 32 GB), will read from disk on the fly.')            self.X = self.h5_file[self.x_label]
             self.Y = self.h5_file[self.y_label]
         else:
             if self.rank == 0:
-                print('Loading data into memory.')
+                print('Loading file ' + self.filename + ' into memory.')
             self.X = self.h5_file[self.x_label][:]
             self.Y = self.h5_file[self.y_label][:]
 
+        if self.use_hist:
+            n_bins = 256
+            diffs = np.zeros(self.length)
+            indices = np.zeros((self.length, 2))
+            for i in range(self.length):
+                index1 = np.random.randint(self.max_len)
+                index2 = np.random.randint(self.max_len)
+                diffs[i] = self.Y[index1] - self.Y[index2]
+
+            self.diffs = diffs
+            self.indices = indices
+            self.hist, self.bins = np.histogram(diffs, bins=n_bins, density=True)
+            self.hist_indices = np.arange(self.hist.shape[0])
+            self.hist /= n_bins 
+            self.distro = 1 - self.hist
+            self.distro /= self.distro.sum()
+
     def __getitem__(self, index):
-        index1 = np.random.randint(self.max_len)
-        index2 = np.random.randint(self.max_len)
+        if self.use_hist:
+            bin_select = np.random.choice(self.hist_indices, p=self.distro)
+            left = self.bins[bin_select]
+            right = self.bins[bin_select + 1]
+            index = np.random.choice(np.argwhere(np.logical_and(self.diffs['Y'] > left, self.diffs['Y'] <= right)))
+            index1, index2 = self.indices[index, 0], self.indices[index, 1]
+        else:
+            index1 = np.random.randint(self.max_len)
+            index2 = np.random.randint(self.max_len)
         item_x1, item_y1 = self.X[index1], self.Y[index1]
         item_x2, item_y2 = self.X[index2], self.Y[index2]
         return np.array([item_x1.astype('float32'), item_x2.astype('float32')]), item_y1.astype('float32') - item_y2.astype('float32')
