@@ -5,7 +5,7 @@ import os
 import logging
 import numpy as np
 import time
-
+import matplotlib.pyplot as plt
 
 class HDF5Dataset(torch.utils.data.Dataset):
     def __init__(self, filename, x_label, y_label, rank, use_hist=False):
@@ -95,22 +95,33 @@ class TwinHDF5Dataset(torch.utils.data.Dataset):
                 index1 = np.random.randint(self.max_len)
                 index2 = np.random.randint(self.max_len)
                 diffs[i] = self.Y[index1] - self.Y[index2]
-
+                indices[i][0] = index1
+                indices[i][1] = index2
             self.diffs = diffs
             self.indices = indices
+            # plt.hist(diffs, bins=256, density=True)
+            # plt.show()
             self.hist, self.bins = np.histogram(diffs, bins=n_bins, density=True)
             self.hist_indices = np.arange(self.hist.shape[0])
             self.hist /= n_bins 
             self.distro = 1 - self.hist
             self.distro /= self.distro.sum()
+            # plt.plot(self.distro)
+            # plt.show()
 
     def __getitem__(self, index):
         if self.use_hist:
-            bin_select = np.random.choice(self.hist_indices, p=self.distro)
-            left = self.bins[bin_select]
-            right = self.bins[bin_select + 1]
-            index = np.random.choice(np.argwhere(np.logical_and(self.diffs > left, self.diffs <= right)))
-            index1, index2 = self.indices[index, 0], self.indices[index, 1]
+            good_choice = False
+            while not good_choice:
+                try:
+                    bin_select = np.random.choice(self.hist_indices, p=self.distro)
+                    left = self.bins[bin_select]
+                    right = self.bins[bin_select + 1]
+                    index = np.random.choice(np.argwhere(np.logical_and(self.diffs > left, self.diffs <= right))[0])
+                    index1, index2 = self.indices[index, 0], self.indices[index, 1]
+                    good_choice = True
+                except:
+                    pass
         else:
             index1 = np.random.randint(self.max_len)
             index2 = np.random.randint(self.max_len)
