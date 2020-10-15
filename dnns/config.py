@@ -7,6 +7,9 @@ import time
 import os
 
 class Config:
+    """
+    Class to handle configuration from input file and command line args.
+    """
     def __init__(self):
         self.parseArgs()
         # set the default config
@@ -15,6 +18,10 @@ class Config:
         self.parseConfig()
 
     def defaultConfig(self):
+        """
+        This method generates default config variables. Any new variables meant to go in the YAML
+        config file should go here as well. One should use the set() method.
+        """
         self.config = {}
         self.config['cpus_per_task'] = 1
         self.config['batch_size'] = 128
@@ -29,6 +36,9 @@ class Config:
         self.config['use_hist'] = False
 
     def parseArgs(self):
+        """
+        Set up the argument parser with a few additions to handle multi-node training.
+        """
         parser = argparse.ArgumentParser(description='Machine learning with Pytorch. Change dnn.py and your YAML input file to modify training.')
         parser.add_argument('-lr', '--local_rank', default=0, type=int,
                             help='ranking within the nodes')
@@ -39,11 +49,17 @@ class Config:
         self.args = parser.parse_args()
 
     def parseConfig(self):
+        """
+        Parse the configuration from the input yaml file.
+        """
         yaml_config = yaml.safe_load(open(self.args.input, 'r'))
         for key in yaml_config:
             self.config[key] = yaml_config[key]
 
     def printConfig(self):
+        """
+        Print out the configuration.
+        """
         pp = pprint.PrettyPrinter(indent=4)
         print()
         print('Here is your configuration:')
@@ -51,9 +67,23 @@ class Config:
         print()
 
     def getConfig(self):
+        """
+        Get the input configuration.
+
+        Returns
+        -------
+        A Dictionary which holds the configuration.
+        """
         return self.config
 
     def getArgs(self):
+        """
+        Get the command line configuration.
+
+        Returns
+        -------
+        A argparse object.
+        """
         return self.args
 
     def set(self, key, val):
