@@ -5,6 +5,7 @@ import os
 import logging
 import numpy as np
 import time
+import sys
 import matplotlib.pyplot as plt
 
 class HDF5Dataset(torch.utils.data.Dataset):
@@ -41,19 +42,27 @@ class HDF5Dataset(torch.utils.data.Dataset):
             self.Y = self.h5_file[self.y_label][:]
 
         if self.use_hist:
-            n_bins = 256
-            self.hist, self.bins = np.histogram(self.Y, bins=n_bins, density=True)
+            print('Preparing histogram for uniform data sampling.')
+            n_bins = 64
+            self.hist, self.bins = np.histogram(np.linalg.norm(self.Y, axis=-1), bins=n_bins, density=True)
             self.hist_indices = np.arange(self.hist.shape[0])
-            self.hist /= n_bins 
+            self.hist /= n_bins
             self.distro = 1 - self.hist
             self.distro /= self.distro.sum()
-
+    
     def __getitem__(self, index):
         if self.use_hist:
-            bin_select = np.random.choice(self.hist_indices, p=self.distro)
-            left = self.bins[bin_select]
-            right = self.bins[bin_select + 1]
-            index = np.random.choice(np.argwhere(np.logical_and(self.f['Y'] > left, self.f['Y'] <= right)))
+            good_choice = False
+            while not good_choice:
+                try:
+                    bin_select = np.random.choice(self.hist_indices, p=self.distro)
+                    left = self.bins[bin_select]
+                    right = self.bins[bin_select + 1]
+                    vals = np.linalg.norm(self.Y, axis=-1)
+                    index = np.random.choice(np.argwhere(np.logical_and(vals > left, vals <= right))[0])
+                    good_choice = True
+                except:
+                    pass
         item_x, item_y = self.X[index], self.Y[index]
         return torch.from_numpy(item_x.astype('float32')), torch.from_numpy(item_y.astype('float32'))
 
@@ -90,7 +99,7 @@ class TwinHDF5Dataset(torch.utils.data.Dataset):
         if self.use_hist:
             n_bins = 256
             diffs = np.zeros(self.length)
-            indices = np.zeros((self.length, 2))
+            indices = np.zeros((self.length, 2), dtype=np.int64)
             for i in range(self.length):
                 index1 = np.random.randint(self.max_len)
                 index2 = np.random.randint(self.max_len)

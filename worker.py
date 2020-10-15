@@ -101,7 +101,7 @@ def validate(testing_set, model, loss_fn, args, epoch):
 
         if args.rank == 0:
             for elem_t, elem_p in zip(labels, outputs):
-                for t, p in zip(elem_t.data.cpu().numpy(), elem_p.data.cpu().numpy()):
+                for t, p in zip(elem_t.data.cpu().numpy().flatten(), elem_p.data.cpu().numpy().flatten()):
                     f.write('%1.20e\t%1.20e\t' %(t, p))
                 f.write('\n')
 
@@ -116,42 +116,38 @@ def reduce_tensor(tensor):
     rt /= int(os.environ['WORLD_SIZE'])
     return rt
 
-def checkpoint(epoch, model, optimizer, checkpoint_path, best_val, world_size=1, best=False):
+def checkpoint(epoch, model, optimizer, checkpoint_path, best_val, world_size, data_info, best=False):
     if world_size > 1:
+        save_dict = {
+                'epoch' : epoch,
+                'best_val': best_val,
+                'model_state_dict' : model.module.state_dict(),
+                'optimizer_state_dict' : optimizer.state_dict()
+            }
+        save_dict.update(data_info)
+
         if not best:
-            torch.save({
-                'epoch' : epoch,
-                'best_val': best_val,
-                'model_state_dict' : model.module.state_dict(),
-                'optimizer_state_dict' : optimizer.state_dict()
-            }, checkpoint_path + 'checkpoint.torch')
+            torch.save(save_dict, checkpoint_path + '/checkpoint.torch')
         else:
-            torch.save({
-                'epoch' : epoch,
-                'best_val': best_val,
-                'model_state_dict' : model.module.state_dict(),
-                'optimizer_state_dict' : optimizer.state_dict()
-            }, checkpoint_path + 'best_checkpoint.torch')
+            torch.save(save_dict, checkpoint_path + '/best_checkpoint.torch')
     else:
+        save_dict = {
+                'epoch' : epoch,
+                'best_val': best_val,
+                'model_state_dict' : model.state_dict(),
+                'optimizer_state_dict' : optimizer.state_dict()
+            }
+        save_dict.update(data_info)
+        
         if not best:
-            torch.save({
-                'epoch' : epoch,
-                'best_val': best_val,
-                'model_state_dict' : model.state_dict(),
-                'optimizer_state_dict' : optimizer.state_dict()
-            }, checkpoint_path + 'checkpoint.torch' )
+            torch.save(save_dict, checkpoint_path + '/checkpoint.torch' )
         else:
-            torch.save({
-                'epoch' : epoch,
-                'best_val': best_val,
-                'model_state_dict' : model.state_dict(),
-                'optimizer_state_dict' : optimizer.state_dict()
-            }, checkpoint_path + 'best_checkpoint.torch' )
+            torch.save(save_dict, checkpoint_path + '/best_checkpoint.torch' )
 
 def tryToResume(model, optimizer, checkpoint_path, args):
 
     try:
-        checkpoint = torch.load(checkpoint_path + 'checkpoint.torch', map_location = lambda storage, loc: storage.cuda(args.local_rank))
+        checkpoint = torch.load(checkpoint_path + '/checkpoint.torch', map_location = lambda storage, loc: storage.cuda(args.local_rank))
         if args.rank == 0:
             print('The checkpoint was loaded successfully. Continuing training.')
     except FileNotFoundError:
@@ -223,12 +219,12 @@ def main():
                       (epoch, training_loss, validation_loss, time.time() - start))
             loss_vs_epoch.write('%10.20e\t%10.20e\t%10.20e\t%10.20e\n' % (epoch, training_loss, validation_loss, time.time() - start))
             loss_vs_epoch.flush()
-            checkpoint(epoch, model, optimizer, checkpoint_path, best_val, world_size=args.world_size)
+            checkpoint(epoch, model, optimizer, checkpoint_path, best_val, args.world_size, data.training_dataset.h5_file.attrs)
 
             if validation_loss < best_val:
-                print('Better validation loss was found, checkpointing to ' + checkpoint_path + 'best_checkpoint.torch')
+                print('Better validation loss was found for epoch ' + str(epoch) + ', checkpointing to ' + checkpoint_path + 'best_checkpoint.torch')
                 best_val = validation_loss
-                checkpoint(epoch, model, optimizer, checkpoint_path, best_val, world_size=args.world_size, best=True)
+                checkpoint(epoch, model, optimizer, checkpoint_path, best_val, args.world_size, data.training_dataset.h5_file.attrs, best=True)
 
 if __name__ == '__main__':
     main()
