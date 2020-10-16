@@ -7,6 +7,95 @@ import numpy as np
 import time
 import sys
 import matplotlib.pyplot as plt
+import subprocess
+import hashlib
+
+def dataSplit(fname, test_pct, hash_on_key):
+    """
+    Split a HDF5 dataset into a training file and testing file.
+
+    Arguments
+    ---------
+    fname (string): Name of file to be written in the train and test directory.
+    test_pct (float): Percentage of test.
+    hash_on_key (string): Select which dataset to perform a hash on. This hash allows us to know
+    for sure that no element in the test set is in the training set.
+
+    """
+    file = h5py.File(fname, 'r')
+    subprocess.call(['mkdir -p train test'], shell=True)
+    training_file = h5py.File('train/' + fname , 'w')
+    testing_file = h5py.File('test/' + fname , 'w')
+
+    for key, val in file.attrs.items():
+        testing_file.attrs[key] = val
+        training_file.attrs[key] = val
+
+    n_images = file[list(file.keys())[0]].shape[0]
+
+    n_testing = int(n_images * test_pct)
+    n_training = n_images - n_testing
+    for key, val in file.items():
+        training_file.create_dataset(key, (n_training,) + file[key].shape[1:])
+        testing_file.create_dataset(key, (n_testing,) + file[key].shape[1:])
+
+    hashes = []
+    print('Hashing dataset:', hash_on_key)
+    for elem in getProgressBar()(file[hash_on_key]):
+        h = hashlib.sha256(elem).hexdigest()
+        hashes.append(h)
+
+    hashes = np.array(hashes)
+    sorted_inds = np.argsort(hashes)
+    sorted_hashes = hashes[sorted_inds]
+
+    test_indices = sorted_inds[:n_testing]
+
+    # we have to check and make sure the last element is not a duplicate
+    duplicate = True
+    while duplicate:
+        for elem in sorted_inds[n_testing:]:
+            if elem != test_indices[-1]:
+                duplicate = False
+            else:
+                n_testing += 1
+                n_training -= 1
+
+    print('Test pct:', float(n_testing / n_images))
+    print('Train pct:', float(n_training / n_images))
+
+    assert float(n_testing / n_images) + float(n_training / n_images) == 1.0, 'Test and Train Percentages should add up to 1.0.'
+    test_indices = np.sort(sorted_inds[:n_testing])
+    train_indices = np.sort(sorted_inds[n_testing:])
+    
+
+
+
+    # this can be made to fit in a certain amount of memory
+    # 1024 for now
+    write_batch_size = 1024
+    n_test_batches = int(test_indices.shape[0] / write_batch_size) + 1
+    n_train_batches = int(train_indices.shape[0] / write_batch_size) + 1
+    for key in file.keys():
+        print('Dataset name:', key)
+        print('Writing test data...')
+        for i in getProgressBar()(range(n_test_batches)):
+            start = i * write_batch_size
+            end = (i + 1) * write_batch_size
+            if end > len(test_indices):
+                end = len(test_indices)
+            testing_file[key][start:end] = file[key][test_indices[start:end]]
+        print('Writing train data...')
+        for i in getProgressBar()(range(n_train_batches)):
+            start = i * write_batch_size
+            end = (i + 1) * write_batch_size
+            if end > len(train_indices):
+                end = len(train_indices)
+            training_file[key][start:end] = file[key][train_indices[start:end]]
+
+    training_file.close()
+    testing_file.close()
+    file.close()
 
 class HDF5Dataset(torch.utils.data.Dataset):
     """
