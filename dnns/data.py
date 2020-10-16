@@ -14,8 +14,8 @@ def dataSplit(fname, test_pct, hash_on_key):
     """
     Split a HDF5 dataset into a training file and testing file.
 
-    Arguments
-    ---------
+    Parameters
+    ----------
     fname (string): Name of file to be written in the train and test directory.
     test_pct (float): Percentage of test.
     hash_on_key (string): Select which dataset to perform a hash on. This hash allows us to know
