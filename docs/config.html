@@ -1,0 +1,203 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Config class &#8212; dnns 1.0.0 documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/language_data.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Data module" href="data.html" />
+    <link rel="prev" title="dnns documentation!" href="index.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="module-config">
+<span id="config-class"></span><h1>Config class<a class="headerlink" href="#module-config" title="Permalink to this headline">¶</a></h1>
+<dl class="py class">
+<dt id="config.Config">
+<em class="property">class </em><code class="sig-prename descclassname">config.</code><code class="sig-name descname">Config</code><a class="reference internal" href="_modules/config.html#Config"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#config.Config" title="Permalink to this definition">¶</a></dt>
+<dd><p>Class to handle configuration from input file and command line args.</p>
+<p class="rubric">Methods</p>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#config.Config.defaultConfig" title="config.Config.defaultConfig"><code class="xref py py-obj docutils literal notranslate"><span class="pre">defaultConfig</span></code></a>()</p></td>
+<td><p>This method generates default config variables.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#config.Config.getArgs" title="config.Config.getArgs"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getArgs</span></code></a>()</p></td>
+<td><p>Get the command line configuration.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#config.Config.getConfig" title="config.Config.getConfig"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getConfig</span></code></a>()</p></td>
+<td><p>Get the input configuration.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#config.Config.parseArgs" title="config.Config.parseArgs"><code class="xref py py-obj docutils literal notranslate"><span class="pre">parseArgs</span></code></a>()</p></td>
+<td><p>Set up the argument parser with a few additions to handle multi-node training.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#config.Config.parseConfig" title="config.Config.parseConfig"><code class="xref py py-obj docutils literal notranslate"><span class="pre">parseConfig</span></code></a>()</p></td>
+<td><p>Parse the configuration from the input yaml file.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#config.Config.printConfig" title="config.Config.printConfig"><code class="xref py py-obj docutils literal notranslate"><span class="pre">printConfig</span></code></a>()</p></td>
+<td><p>Print out the configuration.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#config.Config.set" title="config.Config.set"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set</span></code></a>(key, val)</p></td>
+<td><p>Add new variables to the configuration.</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="py method">
+<dt id="config.Config.defaultConfig">
+<code class="sig-name descname">defaultConfig</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/config.html#Config.defaultConfig"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#config.Config.defaultConfig" title="Permalink to this definition">¶</a></dt>
+<dd><p>This method generates default config variables. Any new variables meant to go in the YAML
+config file should go here as well. One should use the set() method.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="config.Config.getArgs">
+<code class="sig-name descname">getArgs</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/config.html#Config.getArgs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#config.Config.getArgs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the command line configuration.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><dl class="simple">
+<dt>A argparse object.</dt><dd></dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="config.Config.getConfig">
+<code class="sig-name descname">getConfig</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/config.html#Config.getConfig"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#config.Config.getConfig" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the input configuration.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><dl class="simple">
+<dt>A Dictionary which holds the configuration.</dt><dd></dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="config.Config.parseArgs">
+<code class="sig-name descname">parseArgs</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/config.html#Config.parseArgs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#config.Config.parseArgs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set up the argument parser with a few additions to handle multi-node training.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="config.Config.parseConfig">
+<code class="sig-name descname">parseConfig</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/config.html#Config.parseConfig"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#config.Config.parseConfig" title="Permalink to this definition">¶</a></dt>
+<dd><p>Parse the configuration from the input yaml file.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="config.Config.printConfig">
+<code class="sig-name descname">printConfig</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/config.html#Config.printConfig"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#config.Config.printConfig" title="Permalink to this definition">¶</a></dt>
+<dd><p>Print out the configuration.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="config.Config.set">
+<code class="sig-name descname">set</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">key</span></em>, <em class="sig-param"><span class="n">val</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/config.html#Config.set"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#config.Config.set" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add new variables to the configuration.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">dnns</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Config class</a></li>
+<li class="toctree-l1"><a class="reference internal" href="data.html">Data module</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="index.html" title="previous chapter">dnns documentation!</a></li>
+      <li>Next: <a href="data.html" title="next chapter">Data module</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2020, Kevin Ryczko.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.1.2</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/config.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

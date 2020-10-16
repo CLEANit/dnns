@@ -1,0 +1,160 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data module &#8212; dnns 1.0.0 documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/language_data.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="Config class" href="config.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="module-data">
+<span id="data-module"></span><h1>Data module<a class="headerlink" href="#module-data" title="Permalink to this headline">¶</a></h1>
+<dl class="py class">
+<dt id="data.HDF5Dataset">
+<em class="property">class </em><code class="sig-prename descclassname">data.</code><code class="sig-name descname">HDF5Dataset</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">filename</span></em>, <em class="sig-param"><span class="n">x_label</span></em>, <em class="sig-param"><span class="n">y_label</span></em>, <em class="sig-param"><span class="n">rank</span></em>, <em class="sig-param"><span class="n">use_hist</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/data.html#HDF5Dataset"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#data.HDF5Dataset" title="Permalink to this definition">¶</a></dt>
+<dd><p>HDF5 Dataset class which wraps the torch.utils.data.Dataset class.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>filename (string): HDF5 filename.</strong></dt><dd></dd>
+<dt><strong>x_label (string): Dataset label for the input data.</strong></dt><dd></dd>
+<dt><strong>y_label (string): Dataset label for the output data.</strong></dt><dd></dd>
+<dt><strong>rank (int): Rank of the process that is creating this object.</strong></dt><dd></dd>
+<dt><strong>use_hist (bool): Generate a histogram and use metropolis sampling to select training examples. This is experimental.</strong></dt><dd></dd>
+</dl>
+</dd>
+</dl>
+<p class="rubric">Methods</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 63%" />
+<col style="width: 37%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><strong>checkDataSize</strong></p></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="py class">
+<dt id="data.TwinHDF5Dataset">
+<em class="property">class </em><code class="sig-prename descclassname">data.</code><code class="sig-name descname">TwinHDF5Dataset</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">filename</span></em>, <em class="sig-param"><span class="n">x_label</span></em>, <em class="sig-param"><span class="n">y_label</span></em>, <em class="sig-param"><span class="n">n_samples</span></em>, <em class="sig-param"><span class="n">rank</span></em>, <em class="sig-param"><span class="n">use_hist</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/data.html#TwinHDF5Dataset"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#data.TwinHDF5Dataset" title="Permalink to this definition">¶</a></dt>
+<dd><p class="rubric">Methods</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 63%" />
+<col style="width: 37%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><strong>checkDataSize</strong></p></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="py function">
+<dt id="data.dataSplit">
+<code class="sig-prename descclassname">data.</code><code class="sig-name descname">dataSplit</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">fname</span></em>, <em class="sig-param"><span class="n">test_pct</span></em>, <em class="sig-param"><span class="n">hash_on_key</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/data.html#dataSplit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#data.dataSplit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Split a HDF5 dataset into a training file and testing file.</p>
+</dd></dl>
+
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">dnns</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="config.html">Config class</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Data module</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="config.html" title="previous chapter">Config class</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2020, Kevin Ryczko.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.1.2</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/data.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
