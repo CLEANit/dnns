@@ -84,6 +84,16 @@
 <dt id="data.dataSplit">
 <code class="sig-prename descclassname">data.</code><code class="sig-name descname">dataSplit</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">fname</span></em>, <em class="sig-param"><span class="n">test_pct</span></em>, <em class="sig-param"><span class="n">hash_on_key</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/data.html#dataSplit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#data.dataSplit" title="Permalink to this definition">¶</a></dt>
 <dd><p>Split a HDF5 dataset into a training file and testing file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>fname (string): Name of file to be written in the train and test directory.</strong></dt><dd></dd>
+<dt><strong>test_pct (float): Percentage of test.</strong></dt><dd></dd>
+<dt><strong>hash_on_key (string): Select which dataset to perform a hash on. This hash allows us to know</strong></dt><dd></dd>
+<dt><strong>for sure that no element in the test set is in the training set.</strong></dt><dd></dd>
+</dl>
+</dd>
+</dl>
 </dd></dl>
 
 </div>
