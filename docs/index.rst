@@ -3,8 +3,10 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-dnns documentation!
+Welcome to Deep Neural Network's Docs!
 ===============================================
+
+This module provides scripts, classes, and functions to help you train deep neural networks on multiple machines with multiple GPUs.
 
 .. toctree::
    :maxdepth: 2
