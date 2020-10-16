@@ -1,5 +1,5 @@
-Config class
+Data module
 **************************
 
-.. automodule:: config
+.. automodule:: data
     :members:

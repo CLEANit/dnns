@@ -87,6 +87,9 @@ class Config:
         return self.args
 
     def set(self, key, val):
+        """
+        Add new variables to the configuration.
+        """
         self.config[key] = val
 
         

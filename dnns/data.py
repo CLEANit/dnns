@@ -9,7 +9,21 @@ import sys
 import matplotlib.pyplot as plt
 
 class HDF5Dataset(torch.utils.data.Dataset):
+    """
+    HDF5 Dataset class which wraps the torch.utils.data.Dataset class.
+
+    Parameters
+    ----------
+    filename (string): HDF5 filename.
+    x_label (string): Dataset label for the input data.
+    y_label (string): Dataset label for the output data.
+    rank (int): Rank of the process that is creating this object.
+    use_hist (bool): Generate a histogram and use metropolis sampling to select training examples. This is experimental.
+    """
     def __init__(self, filename, x_label, y_label, rank, use_hist=False):
+        """
+        Initialization of the class. 
+        """
         super(HDF5Dataset, self).__init__()
         self.filename = filename
         self.x_label = x_label

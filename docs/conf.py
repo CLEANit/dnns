@@ -17,7 +17,7 @@ sys.path.insert(0, os.path.abspath('../dnns'))
 
 # -- Project information -----------------------------------------------------
 
-project = 'QuantumTransduction'
+project = 'dnns'
 copyright = '2020, Kevin Ryczko'
 author = 'Kevin Ryczko'
 
