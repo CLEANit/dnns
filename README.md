@@ -1,6 +1,6 @@
 # dnns - general purpose package for training deep neural networks with custom HDF5 datasets. 
 
-After many iterations of deep learning scripts, I have finally decided to have one package - with data loading tools to do deep learning.
+After many iterations of deep learning scripts, I have finally decided to have one package - with data loading tools to do deep learning. For more documentation go to cleanit.github.io/dnns.
 
 ## Some information about the package:
   1. This package utilizes pytorch.
@@ -103,4 +103,4 @@ Afterwards a checkpoint file `checkpoint.torch`, and a data file `loss_vs_epoch.
 2) There has not been a lot of testing of this repo. I expect there will be critical issues that must be taken care of in future releases.
 
 ## Contact
-Please contact me at `kryczko@uottawa.ca` for any issues.
+Please contact me at `kevin.ryczko@uottawa.ca` for any issues.
