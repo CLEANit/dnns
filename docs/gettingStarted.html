@@ -1,0 +1,319 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Getting Started &mdash; dnns 1.0.0 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Config class" href="config.html" />
+    <link rel="prev" title="Deep Neural Networks" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home" alt="Documentation Home"> dnns
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Getting Started</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#quickstart">Quickstart</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#slowstart">Slowstart</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#limitations">Limitations</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="config.html">Config class</a></li>
+<li class="toctree-l1"><a class="reference internal" href="data.html">Data module</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">dnns</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+        
+      <li>Getting Started</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/gettingstarted.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="getting-started">
+<h1>Getting Started<a class="headerlink" href="#getting-started" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="quickstart">
+<h2>Quickstart<a class="headerlink" href="#quickstart" title="Permalink to this headline">¶</a></h2>
+<p>You <strong>must</strong> have 2 things (1 other thing is recommended).</p>
+<blockquote>
+<div><ol class="arabic simple">
+<li><p>A network (using the ordinary class structure that pytorch uses) written to a file (default is dnn.py) with a network class defined to be DNN.</p></li>
+<li><p>A train and test directory with your HDF5 data sitting in it. The default dataset labels that the loader will read are ‘X’ and ‘Y’, which represent input and output data.</p></li>
+<li><p>(Recommended) A YAML file (default name is input.yaml) where you can configure the training protocol.</p></li>
+</ol>
+</div></blockquote>
+<p>To run, you can simply run:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="o">-</span><span class="n">m</span> <span class="n">torch</span><span class="o">.</span><span class="n">distributed</span><span class="o">.</span><span class="n">launch</span> <span class="o">-</span><span class="n">nnodes</span> <span class="o">&lt;</span><span class="n">n_nodes</span><span class="o">&gt;</span> <span class="o">--</span><span class="n">nproc_per_node</span> <span class="o">&lt;</span><span class="n">n_gpus_per_node</span><span class="o">&gt;</span> <span class="n">worker</span><span class="o">.</span><span class="n">py</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="slowstart">
+<h2>Slowstart<a class="headerlink" href="#slowstart" title="Permalink to this headline">¶</a></h2>
+<p>Let’s say you are in some directory called ‘some_dir’. We type ‘ls’ and see:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>~some_dir $ ls
+input.yaml  dnn.py  train/  test/
+</pre></div>
+</div>
+<p>Let’s say you have HDF5 files called ‘training.h5’ and ‘testing.h5’ located in ‘train/’ and ‘test/’ with dataset labels ‘input_data’ and ‘output_data’. Our configuration file ‘input.yaml’ could look something like this:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>~some_dir $ more input.yaml
+# the number of epochs to run
+n_epochs: 2000
+
+# batch size of images
+batch_size: 512
+
+# learning rate for model
+learning_rate: 0.00001
+
+# number of threads for each GPU to use for data queuing
+n_workers: 6
+
+# labels in the HDF5 files
+x_label: &#39;input_data&#39;
+y_label: &#39;output_data&#39;
+
+mixed_precision: false
+</pre></div>
+</div>
+<p>Here we have defined the number of epochs, batch size, learning rate, the number of worker threads, dataset labels, and we have turned mixed precision off. Now let’s look at ‘dnn.py’.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>~some_dir $ more dnn.py
+import torch
+import torch.nn as nn
+import numpy as np
+from collections import OrderedDict
+
+class DNN(nn.Module):
+
+    def __init__(self, input_shape):
+        super().__init__()
+        layers = OrderedDict()
+        layers[&#39;conv_red_1&#39;] = nn.Conv3d(1, 64, 5, padding=2, stride=2)
+        layers[&#39;conv_red_1_elu&#39;] = nn.ELU()
+        layers[&#39;conv_red_2&#39;] = nn.Conv3d(64, 64, 5, padding=2, stride=1)
+        layers[&#39;conv_red_2_elu&#39;] = nn.ELU()
+
+        layers[&#39;conv_nonred_3&#39;] = nn.Conv3d(64, 16, 5, padding=2)
+        layers[&#39;conv_nonred_3_elu&#39;] = nn.ELU()
+        for i in range(4, 9):
+            layers[&#39;conv_nonred_&#39; + str(i)] = nn.Conv3d(16, 16, 5, padding=2)
+            layers[&#39;conv_nonred_&#39; + str(i) + &#39;_elu&#39;] = nn.ELU()
+
+        layers[&#39;conv_red_3&#39;] = nn.Conv3d(16, 64, 5, padding=2, stride=1)
+        layers[&#39;conv_red_3_elu&#39;] = nn.ELU()
+
+        layers[&#39;conv_nonred_9&#39;] = nn.Conv3d(64, 32, 5, padding=2, stride=1)
+        layers[&#39;conv_red_9_elu&#39;] = nn.ELU()
+        for i in range(10, 14):
+            layers[&#39;conv_nonred_&#39; + str(i)] = nn.Conv3d(32, 32, 5, padding=2)
+            layers[&#39;conv_nonred_&#39; + str(i) + &#39;_elu&#39;] = nn.ELU()
+
+        layers[&#39;flatten&#39;] = nn.Flatten()
+        layers[&#39;fc1&#39;] = nn.Linear((input_shape[0] //2 + 1) * (input_shape[1] //2 + 1) * (input_shape[2] //2 + 1) * input_shape[3] * 32, 1024 )
+        layers[&#39;fc1_relu&#39;] = nn.ELU()
+        layers[&#39;fc2&#39;] = nn.Linear(1024, 1)
+        self.model = nn.Sequential(layers)
+
+
+    def forward(self, x):
+        x = x.reshape(x.shape[0], x.shape[-1], x.shape[1], x.shape[2], x.shape[3])
+        return self.model(x)
+</pre></div>
+</div>
+<p>With these defined you can simply run:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="o">-</span><span class="n">m</span> <span class="n">torch</span><span class="o">.</span><span class="n">distributed</span><span class="o">.</span><span class="n">launch</span> <span class="o">-</span><span class="n">nnodes</span> <span class="o">&lt;</span><span class="n">n_nodes</span><span class="o">&gt;</span> <span class="o">--</span><span class="n">nproc_per_node</span> <span class="o">&lt;</span><span class="n">n_gpus_per_node</span><span class="o">&gt;</span> <span class="n">worker</span><span class="o">.</span><span class="n">py</span>
+</pre></div>
+</div>
+<p>Afterwards a checkpoint file ‘checkpoint.torch’, and a data file ‘loss_vs_epoch.dat’ is created.</p>
+</div>
+<div class="section" id="limitations">
+<h2>Limitations<a class="headerlink" href="#limitations" title="Permalink to this headline">¶</a></h2>
+<ol class="arabic simple">
+<li><p>Currently, you can only have one HDF5 file for training/testing.</p></li>
+</ol>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="config.html" class="btn btn-neutral float-right" title="Config class" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="index.html" class="btn btn-neutral float-left" title="Deep Neural Networks" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2020, Kevin Ryczko
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

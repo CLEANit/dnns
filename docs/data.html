@@ -153,6 +153,62 @@
   <div class="section" id="module-data">
 <span id="data-module"></span><h1>Data module<a class="headerlink" href="#module-data" title="Permalink to this headline">¶</a></h1>
 <dl class="py class">
+<dt id="data.Data">
+<em class="property">class </em><code class="sig-prename descclassname">data.</code><code class="sig-name descname">Data</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">loader</span></em>, <em class="sig-param"><span class="n">config</span></em>, <em class="sig-param"><span class="n">args</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/data.html#Data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#data.Data" title="Permalink to this definition">¶</a></dt>
+<dd><p>The main data class for training. Set’s up the HDF5 torch Dataset classes for parallel or non-parallel training.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>loader (class): The class that loads the data from disk. See loader module for more information.</strong></dt><dd></dd>
+<dt><strong>config (class): The class that holds the YAML configuration. See config module for more information.</strong></dt><dd></dd>
+<dt><strong>args (argparse object): Argparse object that holds the command line arguments.</strong></dt><dd></dd>
+</dl>
+</dd>
+</dl>
+<p class="rubric">Methods</p>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#data.Data.getTestingData" title="data.Data.getTestingData"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getTestingData</span></code></a>()</p></td>
+<td><p>Get the dataloader for testing (or validation) data.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#data.Data.getTrainingData" title="data.Data.getTrainingData"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getTrainingData</span></code></a>()</p></td>
+<td><p>Get the dataloader for training data.</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="py method">
+<dt id="data.Data.getTestingData">
+<code class="sig-name descname">getTestingData</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/data.html#Data.getTestingData"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#data.Data.getTestingData" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the dataloader for testing (or validation) data. If the world size is greater than 1, a testing sampler is used.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><dl class="simple">
+<dt>A torch DataLoader.</dt><dd></dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="data.Data.getTrainingData">
+<code class="sig-name descname">getTrainingData</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/data.html#Data.getTrainingData"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#data.Data.getTrainingData" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the dataloader for training data. If the world size is greater than 1, a training sampler is used.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><dl class="simple">
+<dt>A torch DataLoader.</dt><dd></dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
 <dt id="data.HDF5Dataset">
 <em class="property">class </em><code class="sig-prename descclassname">data.</code><code class="sig-name descname">HDF5Dataset</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">filename</span></em>, <em class="sig-param"><span class="n">x_label</span></em>, <em class="sig-param"><span class="n">y_label</span></em>, <em class="sig-param"><span class="n">rank</span></em>, <em class="sig-param"><span class="n">use_hist</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/data.html#HDF5Dataset"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#data.HDF5Dataset" title="Permalink to this definition">¶</a></dt>
 <dd><p>HDF5 Dataset class which wraps the torch.utils.data.Dataset class.</p>
@@ -168,17 +224,23 @@
 </dd>
 </dl>
 <p class="rubric">Methods</p>
-<table class="docutils align-default">
+<table class="longtable docutils align-default">
 <colgroup>
-<col style="width: 63%" />
-<col style="width: 37%" />
+<col style="width: 10%" />
+<col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><strong>checkDataSize</strong></p></td>
-<td></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#data.HDF5Dataset.checkDataSize" title="data.HDF5Dataset.checkDataSize"><code class="xref py py-obj docutils literal notranslate"><span class="pre">checkDataSize</span></code></a>()</p></td>
+<td><p>Check the dataset size and if larger than 32 GB than read from disk, else load into memory.</p></td>
 </tr>
 </tbody>
 </table>
+<dl class="py method">
+<dt id="data.HDF5Dataset.checkDataSize">
+<code class="sig-name descname">checkDataSize</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/data.html#HDF5Dataset.checkDataSize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#data.HDF5Dataset.checkDataSize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check the dataset size and if larger than 32 GB than read from disk, else load into memory.</p>
+</dd></dl>
+
 </dd></dl>
 
 <dl class="py class">
