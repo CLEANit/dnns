@@ -124,13 +124,9 @@ class HDF5Dataset(torch.utils.data.Dataset):
         self.checkDataSize()
 
     def checkDataSize(self):
-        # print('Rank', self.rank,'Trying to load dataset (' + self.filename + ') into memory...', end='')
-        #try:
-        #    self.X = self.h5_file[self.x_label][:]
-        #    self.Y = self.h5_file[self.y_label][:]
-            # print('successful.')
-        # except:
-            # print('unsuccessful. Dataset is too large to fit in memory.')
+        """
+        Check the dataset size and if larger than 32 GB than read from disk, else load into memory.
+        """
 
         max_size = 32 * 1e9 # roughly 32 GB
         if np.prod(self.h5_file[self.x_label].shape) * 8 >  max_size:
@@ -317,6 +313,15 @@ class TwinData:
 
 
 class Data:
+    """
+    The main data class for training. Set's up the HDF5 torch Dataset classes for parallel or non-parallel training. 
+
+    Parameters
+    ----------
+    loader (class): The class that loads the data from disk. See loader module for more information.
+    config (class): The class that holds the YAML configuration. See config module for more information.
+    args (argparse object): Argparse object that holds the command line arguments.
+    """
     def __init__(self, loader, config, args):
         self.loader = loader
         self.config = config
@@ -351,6 +356,13 @@ class Data:
         )
 
     def getTrainingData(self):
+        """
+        Get the dataloader for training data. If the world size is greater than 1, a training sampler is used.
+
+        Returns
+        -------
+        A torch DataLoader.
+        """
         if self.args.world_size > 1:
             return torch.utils.data.DataLoader(
                 self.training_dataset,
@@ -369,6 +381,13 @@ class Data:
             )
 
     def getTestingData(self):
+        """
+        Get the dataloader for testing (or validation) data. If the world size is greater than 1, a testing sampler is used.
+
+        Returns
+        -------
+        A torch DataLoader.
+        """
         if self.args.world_size > 1:
             return torch.utils.data.DataLoader(self.testing_dataset,
                 batch_size=self.config['batch_size'],
