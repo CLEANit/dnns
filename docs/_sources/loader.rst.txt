@@ -1,5 +1,5 @@
-data module
+loader module
 **************************
 
-.. automodule:: data
+.. automodule:: loader
     :members:

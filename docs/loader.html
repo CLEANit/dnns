@@ -1,0 +1,469 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>loader module &mdash; dnns 1.0.0 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="data module" href="data.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home" alt="Documentation Home"> dnns
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="gettingstarted.html">Getting Started on a Single Machine</a></li>
+<li class="toctree-l1"><a class="reference internal" href="config.html">Config class</a></li>
+<li class="toctree-l1"><a class="reference internal" href="data.html">data module</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">loader module</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">dnns</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+        
+      <li>loader module</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/loader.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="module-loader">
+<span id="loader-module"></span><h1>loader module<a class="headerlink" href="#module-loader" title="Permalink to this headline">¶</a></h1>
+<dl class="py class">
+<dt id="loader.Loader">
+<em class="property">class </em><code class="sig-prename descclassname">loader.</code><code class="sig-name descname">Loader</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">parser</span></em>, <em class="sig-param"><span class="n">config</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/loader.html#Loader"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#loader.Loader" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read in HDF5 files from train and test directory and perform some checks to make sure everything is okay.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>parser (argparse object): Command line arguments handled by argparse.</strong></dt><dd></dd>
+<dt><strong>config (dict): Dictionary of configuration which was made from YAML.</strong></dt><dd></dd>
+</dl>
+</dd>
+</dl>
+<p class="rubric">Methods</p>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#loader.Loader.getImageCountsPerFile" title="loader.Loader.getImageCountsPerFile"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getImageCountsPerFile</span></code></a>()</p></td>
+<td><p><dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p></p></dd>
+</dl>
+</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#loader.Loader.getMax" title="loader.Loader.getMax"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getMax</span></code></a>()</p></td>
+<td><p><dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p></p></dd>
+</dl>
+</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#loader.Loader.getMin" title="loader.Loader.getMin"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getMin</span></code></a>()</p></td>
+<td><p><dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p></p></dd>
+</dl>
+</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#loader.Loader.getTestingFiles" title="loader.Loader.getTestingFiles"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getTestingFiles</span></code></a>()</p></td>
+<td><p><dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p></p></dd>
+</dl>
+</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#loader.Loader.getTestingH5Files" title="loader.Loader.getTestingH5Files"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getTestingH5Files</span></code></a>()</p></td>
+<td><p><dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p></p></dd>
+</dl>
+</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#loader.Loader.getTotalImages" title="loader.Loader.getTotalImages"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getTotalImages</span></code></a>()</p></td>
+<td><p><dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p></p></dd>
+</dl>
+</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#loader.Loader.getTrainingFiles" title="loader.Loader.getTrainingFiles"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getTrainingFiles</span></code></a>()</p></td>
+<td><p><dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p></p></dd>
+</dl>
+</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#loader.Loader.getTrainingH5Files" title="loader.Loader.getTrainingH5Files"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getTrainingH5Files</span></code></a>()</p></td>
+<td><p><dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p></p></dd>
+</dl>
+</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#loader.Loader.getXShape" title="loader.Loader.getXShape"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getXShape</span></code></a>()</p></td>
+<td><p><dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p></p></dd>
+</dl>
+</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#loader.Loader.getYShape" title="loader.Loader.getYShape"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getYShape</span></code></a>()</p></td>
+<td><p><dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p></p></dd>
+</dl>
+</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#loader.Loader.prepareData" title="loader.Loader.prepareData"><code class="xref py py-obj docutils literal notranslate"><span class="pre">prepareData</span></code></a>(files[, test])</p></td>
+<td><p>Check the shapes across all data sets to make sure all is good.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#loader.Loader.readDir" title="loader.Loader.readDir"><code class="xref py py-obj docutils literal notranslate"><span class="pre">readDir</span></code></a>(dir_name)</p></td>
+<td><p>Read all files in a directory.</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="py method">
+<dt id="loader.Loader.getImageCountsPerFile">
+<code class="sig-name descname">getImageCountsPerFile</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/loader.html#Loader.getImageCountsPerFile"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#loader.Loader.getImageCountsPerFile" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><dl class="simple">
+<dt>A dict with training filenames as keys and number of images as values.</dt><dd></dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="loader.Loader.getMax">
+<code class="sig-name descname">getMax</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/loader.html#Loader.getMax"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#loader.Loader.getMax" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><dl class="simple">
+<dt>The maximim value of training and testing.</dt><dd></dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="loader.Loader.getMin">
+<code class="sig-name descname">getMin</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/loader.html#Loader.getMin"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#loader.Loader.getMin" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><dl class="simple">
+<dt>The minimum value of training and testing.</dt><dd></dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="loader.Loader.getTestingFiles">
+<code class="sig-name descname">getTestingFiles</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/loader.html#Loader.getTestingFiles"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#loader.Loader.getTestingFiles" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><dl class="simple">
+<dt>The list of testing filenames.</dt><dd></dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="loader.Loader.getTestingH5Files">
+<code class="sig-name descname">getTestingH5Files</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/loader.html#Loader.getTestingH5Files"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#loader.Loader.getTestingH5Files" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><dl class="simple">
+<dt>The list of testing h5py file objects.</dt><dd></dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="loader.Loader.getTotalImages">
+<code class="sig-name descname">getTotalImages</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/loader.html#Loader.getTotalImages"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#loader.Loader.getTotalImages" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><dl class="simple">
+<dt>The total number of images used in training.</dt><dd></dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="loader.Loader.getTrainingFiles">
+<code class="sig-name descname">getTrainingFiles</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/loader.html#Loader.getTrainingFiles"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#loader.Loader.getTrainingFiles" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><dl class="simple">
+<dt>The list of training filenames.</dt><dd></dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="loader.Loader.getTrainingH5Files">
+<code class="sig-name descname">getTrainingH5Files</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/loader.html#Loader.getTrainingH5Files"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#loader.Loader.getTrainingH5Files" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><dl class="simple">
+<dt>The list of training h5py file objects.</dt><dd></dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="loader.Loader.getXShape">
+<code class="sig-name descname">getXShape</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/loader.html#Loader.getXShape"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#loader.Loader.getXShape" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><dl class="simple">
+<dt>The shape of the input data.</dt><dd></dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="loader.Loader.getYShape">
+<code class="sig-name descname">getYShape</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/loader.html#Loader.getYShape"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#loader.Loader.getYShape" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><dl class="simple">
+<dt>The shape of the output data.</dt><dd></dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="loader.Loader.prepareData">
+<code class="sig-name descname">prepareData</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">files</span></em>, <em class="sig-param"><span class="n">test</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/loader.html#Loader.prepareData"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#loader.Loader.prepareData" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check the shapes across all data sets to make sure all is good.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>files (list): list of files to check.</strong></dt><dd></dd>
+<dt><strong>test (bool): Set to true if they are testing files. Default: False.</strong></dt><dd></dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt>A list of h5py file objects.</dt><dd></dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="loader.Loader.readDir">
+<code class="sig-name descname">readDir</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">dir_name</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/loader.html#Loader.readDir"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#loader.Loader.readDir" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read all files in a directory. This is called in the __init__ function.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>dir_name (str): Path in which files will be collected.</strong></dt><dd></dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt>A list of files in the supplied path.</dt><dd></dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+      
+        <a href="data.html" class="btn btn-neutral float-left" title="data module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2020, Kevin Ryczko
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

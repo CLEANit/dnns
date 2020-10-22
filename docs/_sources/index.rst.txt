@@ -25,6 +25,7 @@ To get started, :doc:`click here <./gettingstarted>`.
    gettingstarted
    config
    data
+   loader
 
 Indices and tables
 ==================
