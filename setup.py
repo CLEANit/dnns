@@ -6,8 +6,8 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
      name='dnns',  
-     version='1.4.1',
-     scripts=['worker.py', 'lossPlot.py', 'tvpPlot.py'] ,
+     version='1.4.2',
+     scripts=['worker.py', 'lossPlot.py', 'tvpPlot.py', 'splitDataset.py'] ,
      author="Kevin Ryczko",
      author_email="kevin.ryczko@uottawa.ca",
      description="A deep learning package for using HDF5 and Pytorch (Distributed Data Parallel with NVIDIA mixed-precision) with ease.",
