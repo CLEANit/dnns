@@ -9,6 +9,13 @@ import sys
 import matplotlib.pyplot as plt
 import subprocess
 import hashlib
+import progressbar
+
+def getProgressBar():
+    return progressbar.ProgressBar(widgets=[
+    ' [', progressbar.Timer(), '] ',
+    progressbar.Bar(marker='█'),
+    ' (', progressbar.ETA(), ') ',])
 
 def dataSplit(fname, test_pct, hash_on_key):
     """

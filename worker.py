@@ -127,9 +127,9 @@ def checkpoint(epoch, model, optimizer, checkpoint_path, best_val, world_size, d
         save_dict.update(data_info)
 
         if not best:
-            torch.save(save_dict, os.path.join(checkpoint_path, '/checkpoint.torch'))
+            torch.save(save_dict, os.path.join(checkpoint_path, 'checkpoint.torch'))
         else:
-            torch.save(save_dict, os.path.join(checkpoint_path, '/best_checkpoint.torch'))
+            torch.save(save_dict, os.path.join(checkpoint_path, 'best_checkpoint.torch'))
     else:
         save_dict = {
                 'epoch' : epoch,
@@ -140,14 +140,14 @@ def checkpoint(epoch, model, optimizer, checkpoint_path, best_val, world_size, d
         save_dict.update(data_info)
         
         if not best:
-            torch.save(save_dict, os.path.join(checkpoint_path, '/checkpoint.torch' ))
+            torch.save(save_dict, os.path.join(checkpoint_path, 'checkpoint.torch' ))
         else:
-            torch.save(save_dict, os.path.join(checkpoint_path, '/best_checkpoint.torch'))
+            torch.save(save_dict, os.path.join(checkpoint_path, 'best_checkpoint.torch'))
 
 def tryToResume(model, optimizer, checkpoint_path, args):
 
     try:
-        checkpoint = torch.load(os.path.join(checkpoint_path, '/checkpoint.torch'), map_location = lambda storage, loc: storage.cuda(args.local_rank))
+        checkpoint = torch.load(os.path.join(checkpoint_path, 'checkpoint.torch'), map_location = lambda storage, loc: storage.cuda(args.local_rank))
         if args.rank == 0:
             print('The checkpoint was loaded successfully. Continuing training.')
     except FileNotFoundError:

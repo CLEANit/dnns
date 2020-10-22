@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-from data import dataSplit
+from dnns.data import dataSplit
 import sys
 
 def main():
