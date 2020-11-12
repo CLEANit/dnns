@@ -61,8 +61,8 @@ def main():
 
 
     # plt.title('True vs. predicted distances for $H_2$', {'family': 'serif','fontsize': 15})
-    axes[0].set_xlabel('True', {'family': 'serif','fontsize': 12})
-    axes[0].set_ylabel('Predicted', {'family': 'serif','fontsize': 12})
+    axes[0].set_xlabel('True')
+    axes[0].set_ylabel('Predicted')
 
     diffs = true - pred
     im = axes[1].scatter(true, true - pred, s=10, c=colors, cmap=cm.thermal_r)
@@ -73,8 +73,8 @@ def main():
 
 
     # plt.title('True vs. predicted distances for $H_2$', {'family': 'serif','fontsize': 15})
-    axes[1].set_xlabel('True', {'family': 'serif','fontsize': 12})
-    axes[1].set_ylabel('True - Predicted', {'family': 'serif','fontsize': 12})
+    axes[1].set_xlabel('True')
+    axes[1].set_ylabel('True - Predicted')
     axes[0].set_aspect('equal', 'box')
     axes[1].set_ylim([np.mean(diffs) - 3 * np.std(diffs), np.mean(diffs) + 3 * np.std(diffs)])
     plt.tight_layout()
