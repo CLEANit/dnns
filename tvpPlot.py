@@ -7,7 +7,7 @@ import sys
 from cmocean import cm
 import argparse
 
-def parseArgs(self):
+def parseArgs():
     """
     Set up the argument parser.
     """
