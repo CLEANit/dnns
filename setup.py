@@ -6,7 +6,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
      name='dnns',  
-     version='1.4.5',
+     version='1.4.6',
      scripts=['worker.py', 'lossPlot.py', 'tvpPlot.py', 'splitDataset.py'] ,
      author="Kevin Ryczko",
      author_email="kevin.ryczko@uottawa.ca",
