@@ -273,7 +273,7 @@ class ResnetDecoder3d(nn.Module):
 
 class ResNet2d(nn.Module):
     
-    def __init__(self, in_channels, n_classes, *args, **kwargs):
+    def __init__(self, input_size, in_channels=1, n_classes=1, *args, **kwargs):
         super().__init__()
         self.encoder = ResNetEncoder2d(in_channels, *args, **kwargs)
         self.decoder = ResnetDecoder2d(self.encoder.blocks[-1].blocks[-1].expanded_channels, n_classes)
@@ -285,7 +285,7 @@ class ResNet2d(nn.Module):
 
 class ResNet3d(nn.Module):
     
-    def __init__(self, in_channels, n_classes, *args, **kwargs):
+    def __init__(self, input_size, in_channels=1, n_classes=1, *args, **kwargs):
         super().__init__()
         self.encoder = ResNetEncoder3d(in_channels, *args, **kwargs)
         self.decoder = ResnetDecoder3d(self.encoder.blocks[-1].blocks[-1].expanded_channels, n_classes)
