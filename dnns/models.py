@@ -279,6 +279,7 @@ class ResNet2d(nn.Module):
         self.decoder = ResnetDecoder2d(self.encoder.blocks[-1].blocks[-1].expanded_channels, n_classes)
         
     def forward(self, x):
+        x = x.permute(0, 3, 1, 2)
         x = self.encoder(x)
         x = self.decoder(x)
         return x
@@ -291,6 +292,7 @@ class ResNet3d(nn.Module):
         self.decoder = ResnetDecoder3d(self.encoder.blocks[-1].blocks[-1].expanded_channels, n_classes)
         
     def forward(self, x):
+        x = x.permute(0, 4, 1, 2, 3)
         x = self.encoder(x)
         x = self.decoder(x)
         return x
