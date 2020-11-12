@@ -94,7 +94,7 @@ def conv_3d_bn(in_channels, out_channels, conv, *args, **kwargs):
                           'bn': nn.BatchNorm3d(out_channels) }))
 
 
-class ResNetBasicBlock2d(ResNetResidualBlock):
+class ResNetBasicBlock2d(ResNetResidualBlock2d):
     expansion = 1
     def __init__(self, in_channels, out_channels, activation=nn.ReLU, *args, **kwargs):
         super().__init__(in_channels, out_channels, *args, **kwargs)
@@ -104,7 +104,7 @@ class ResNetBasicBlock2d(ResNetResidualBlock):
             conv_2d_bn(self.out_channels, self.expanded_channels, conv=self.conv, bias=False),
         )
 
-class ResNetBasicBlock3d(ResNetResidualBlock):
+class ResNetBasicBlock3d(ResNetResidualBlock3d):
     expansion = 1
     def __init__(self, in_channels, out_channels, activation=nn.ReLU, *args, **kwargs):
         super().__init__(in_channels, out_channels, *args, **kwargs)
@@ -114,7 +114,7 @@ class ResNetBasicBlock3d(ResNetResidualBlock):
             conv_3d_bn(self.out_channels, self.expanded_channels, conv=self.conv, bias=False),
         )
 
-class ResNetBottleNeckBlock2d(ResNetResidualBlock):
+class ResNetBottleNeckBlock2d(ResNetResidualBlock2d):
     expansion = 4
     def __init__(self, in_channels, out_channels, activation=nn.ReLU, *args, **kwargs):
         super().__init__(in_channels, out_channels, expansion=4, *args, **kwargs)
@@ -126,7 +126,7 @@ class ResNetBottleNeckBlock2d(ResNetResidualBlock):
              conv_2d_bn(self.out_channels, self.expanded_channels, self.conv, kernel_size=1),
         )
 
-class ResNetBottleNeckBlock3d(ResNetResidualBlock):
+class ResNetBottleNeckBlock3d(ResNetResidualBlock3d):
     expansion = 4
     def __init__(self, in_channels, out_channels, activation=nn.ReLU, *args, **kwargs):
         super().__init__(in_channels, out_channels, expansion=4, *args, **kwargs)
