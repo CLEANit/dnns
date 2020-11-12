@@ -26,6 +26,7 @@ To get started, :doc:`click here <./gettingstarted>`.
    config
    data
    loader
+   scripts
 
 Indices and tables
 ==================

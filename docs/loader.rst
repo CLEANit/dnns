@@ -1,5 +1,5 @@
 loader module
 **************************
 
-.. automodule:: loader
+.. automodule:: dnns.loader
     :members:

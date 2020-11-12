@@ -1,5 +1,5 @@
-Config class
+config module
 **************************
 
-.. automodule:: config
+.. automodule:: dnns.config
     :members:

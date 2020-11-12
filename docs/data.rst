@@ -1,5 +1,5 @@
 data module
 **************************
 
-.. automodule:: data
+.. automodule:: dnns.data
     :members:
