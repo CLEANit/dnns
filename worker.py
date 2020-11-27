@@ -83,8 +83,8 @@ def validate(testing_set, model, loss_fn, args, epoch, output_shape):
     val_loss = 0
     val_counter = 0
     
-    trues = torch.zeros((len(testing_set), output_shape)).cuda()
-    preds = torch.zeros((len(testing_set), output_shape)).cuda()
+    trues = torch.zeros(output_shape).cuda()
+    preds = torch.zeros(output_shape).cuda()
     for data in testing_set:
         inputs, labels, indices = data
         inputs = inputs.cuda(non_blocking=True)
@@ -193,7 +193,6 @@ def main():
        Conf.printConfig()
     # get data
     loader = Loader(args, config)
-    output_shape = loader.getYShape()
 
     if config['twin']:
         data = TwinData(loader, config, args)
@@ -220,7 +219,7 @@ def main():
         data.train_sampler.set_epoch(epoch)
         
         training_loss = train(training_set, model, optimizer, loss_fn, args, config)
-        validation_loss = validate(testing_set, model, loss_fn, args, epoch, output_shape)
+        validation_loss = validate(testing_set, model, loss_fn, args, epoch, data.testShape())
 
         if args.rank == 0:
             print('epoch: %3.0i | training loss: %0.3e | validation loss: %0.3e | time(s): %0.3e' %
