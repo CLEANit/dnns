@@ -135,7 +135,7 @@ class HDF5Dataset(torch.utils.data.Dataset):
         Check the dataset size and if larger than 32 GB than read from disk, else load into memory.
         """
 
-        max_size = 32 * 1e9 # roughly 32 GB
+        max_size = 32 * 1e6 # roughly 32 GB
         self.Ys = []
         if np.prod(self.h5_file[self.x_label].shape) * 8 >  max_size:
             if self.rank == 0:
