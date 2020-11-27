@@ -123,7 +123,7 @@ class HDF5Dataset(torch.utils.data.Dataset):
         super(HDF5Dataset, self).__init__()
         self.filename = filename
         self.x_label = x_label
-        self.y_labels = y_labels
+        self.y_label = y_label
         self.rank = rank
         self.use_hist = use_hist
         self.h5_file = h5py.File(filename, 'r')
@@ -141,14 +141,12 @@ class HDF5Dataset(torch.utils.data.Dataset):
             if self.rank == 0:
                 print('Data from file ' + self.filename + ' is too large (> 32 GB), will read from disk on the fly.')
             self.X = self.h5_file[self.x_label]
-            for y_label in self.y_labels:
-                self.Ys.append(self.h5_file[self.y_label])
+            self.Y = self.h5_file[self.y_label]
         else:
             if self.rank == 0:
                 print('Loading file ' + self.filename + ' into memory.')
             self.X = self.h5_file[self.x_label][:]
-            for y_label in self.y_labels:
-                self.Ys.append(self.h5_file[self.y_label][:])
+            self.Y = self.h5_file[self.y_label][:]
 
         if self.use_hist:
             print('Preparing histogram for uniform data sampling.')
@@ -172,7 +170,7 @@ class HDF5Dataset(torch.utils.data.Dataset):
                     good_choice = True
                 except:
                     pass
-        item_x, item_y = self.X[index], [self.Ys[i][index] for i in range(len(self.y_labels))]
+        item_x, item_y = self.X[index], self.Y[index]
         return torch.from_numpy(item_x.astype('float32')), torch.Tensor(item_y.astype('float32')), index
 
     def __len__(self):
