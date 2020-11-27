@@ -78,7 +78,7 @@ def train(training_set, model, optimizer, loss_fn, args, config):
 
     return epoch_loss / counter
 
-def validate(testing_set, model, loss_fn, args, epoch, output_shape, config):
+def validate(testing_set, model, loss_fn, args, epoch, output_shape):
     model.eval()
     val_loss = 0
     val_counter = 0
@@ -193,7 +193,7 @@ def main():
        Conf.printConfig()
     # get data
     loader = Loader(args, config)
-    output_shape = loader.getYshape()
+    output_shape = loader.getYShape()
 
     if config['twin']:
         data = TwinData(loader, config, args)
