@@ -48,7 +48,7 @@ def train(training_set, model, optimizer, loss_fn, args, config):
     start = time.time()
     for i, data in enumerate(training_set, 0):
         # get the inputs; data is a list of [inputs, labels]
-        inputs, labels = data
+        inputs, labels, indices = data
         inputs = inputs.cuda(non_blocking=True)
         labels = labels.cuda(non_blocking=True)
         # zero the parameter gradients
@@ -78,15 +78,15 @@ def train(training_set, model, optimizer, loss_fn, args, config):
 
     return epoch_loss / counter
 
-def validate(testing_set, model, loss_fn, args, epoch):
+def validate(testing_set, model, loss_fn, args, epoch, output_shape, config):
     model.eval()
     val_loss = 0
     val_counter = 0
-    if args.rank == 0:
-        f = open('true_vs_pred_epoch_%04d.dat' % (epoch), 'w')
-
+    
+    trues = torch.zeros((len(testing_set), output_shape)).cuda()
+    preds = torch.zeros((len(testing_set), output_shape)).cuda()
     for data in testing_set:
-        inputs, labels = data
+        inputs, labels, indices = data
         inputs = inputs.cuda(non_blocking=True)
         labels = labels.cuda(non_blocking=True)
         outputs = model(inputs)
@@ -98,12 +98,18 @@ def validate(testing_set, model, loss_fn, args, epoch):
         val_counter += 1
 
         # outputs = reduce_tensor(outputs)
-
-        if args.rank == 0:
-            for elem_t, elem_p in zip(labels, outputs):
-                for t, p in zip(elem_t.data.cpu().numpy().flatten(), elem_p.data.cpu().numpy().flatten()):
-                    f.write('%1.20e\t%1.20e\t' %(t, p))
-                f.write('\n')
+        for elem_t, elem_p, index in zip(labels, outputs, indices):
+            trues[index] = elem_t
+            preds[index] = elem_p
+    torch.distributed.barrier()
+    torch.distributed.reduce_multigpu([trues], 0)
+    torch.distributed.reduce_multigpu([preds], 0)
+    if args.rank == 0:
+        f = open('true_vs_pred_epoch_%04d.dat' % (epoch), 'w')
+        for elem_t, elem_p in zip(trues, preds):
+            for t, p in zip(elem_t.data.cpu().numpy().flatten(), elem_p.data.cpu().numpy().flatten()):
+                f.write('%1.20e\t%1.20e\t' %(t, p))
+            f.write('\n')
 
     if args.rank == 0:
         f.close()
@@ -187,6 +193,8 @@ def main():
        Conf.printConfig()
     # get data
     loader = Loader(args, config)
+    output_shape = loader.getYshape()
+
     if config['twin']:
         data = TwinData(loader, config, args)
     else:
@@ -212,7 +220,7 @@ def main():
         data.train_sampler.set_epoch(epoch)
         
         training_loss = train(training_set, model, optimizer, loss_fn, args, config)
-        validation_loss = validate(testing_set, model, loss_fn, args, epoch)
+        validation_loss = validate(testing_set, model, loss_fn, args, epoch, output_shape)
 
         if args.rank == 0:
             print('epoch: %3.0i | training loss: %0.3e | validation loss: %0.3e | time(s): %0.3e' %
