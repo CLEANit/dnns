@@ -363,6 +363,9 @@ class Data:
             rank=self.args.rank
         )
 
+    def testShape(self):
+        return self.loader.getTestingFiles()[0].shape
+
     def getTrainingData(self):
         """
         Get the dataloader for training data. If the world size is greater than 1, a training sampler is used.
