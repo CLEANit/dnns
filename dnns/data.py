@@ -364,7 +364,7 @@ class Data:
         )
 
     def testShape(self):
-        return self.loader.getTestingFiles()[0].shape
+        return self.loader.getTestingFiles()[0][self.config['output_label']].shape
 
     def getTrainingData(self):
         """
