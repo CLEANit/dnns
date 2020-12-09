@@ -85,6 +85,7 @@ def validate(testing_set, model, loss_fn, args, epoch, output_shape):
     
     trues = torch.zeros(output_shape).cuda()
     preds = torch.zeros(output_shape).cuda()
+    counts = torch.zeros(output_shape).cuda()
     for data in testing_set:
         inputs, labels, indices = data
         inputs = inputs.cuda(non_blocking=True)
@@ -101,12 +102,14 @@ def validate(testing_set, model, loss_fn, args, epoch, output_shape):
         for elem_t, elem_p, index in zip(labels, outputs, indices):
             trues[index] = elem_t
             preds[index] = elem_p
+            counts[index] += 1
     torch.distributed.barrier()
     torch.distributed.reduce_multigpu([trues], 0)
     torch.distributed.reduce_multigpu([preds], 0)
+    torch.distributed.reduce_multigpu([counts], 0)
     if args.rank == 0:
         f = open('true_vs_pred_epoch_%04d.dat' % (epoch), 'w')
-        for elem_t, elem_p in zip(trues, preds):
+        for elem_t, elem_p in zip(trues / counts, preds / counts):
             for t, p in zip(elem_t.data.cpu().numpy().flatten(), elem_p.data.cpu().numpy().flatten()):
                 f.write('%1.20e\t%1.20e\t' %(t, p))
             f.write('\n')
