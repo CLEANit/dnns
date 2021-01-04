@@ -215,7 +215,7 @@ class ResNetEncoder3d(nn.Module):
         self.blocks_sizes = blocks_sizes
         
         self.gate = nn.Sequential(
-            nn.Conv3d(in_channels, self.blocks_sizes[0], kernel_size=7, stride=1, padding=3, bias=False),
+            nn.Conv3d(in_channels, self.blocks_sizes[0], kernel_size=7, stride=2, padding=3, bias=False),
             nn.BatchNorm3d(self.blocks_sizes[0]),
             activation(),
             nn.MaxPool3d(kernel_size=3, stride=1, padding=1)

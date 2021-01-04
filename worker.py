@@ -7,8 +7,10 @@ import time
 import torch
 import torch.distributed as dist
 from apex.parallel import DistributedDataParallel as DDP
+from apex.parallel.LARC import LARC
 from apex import amp
 import numpy as np
+from torch.optim.lr_scheduler import ReduceLROnPlateau
 
 # locals
 from dnns.loader import Loader
@@ -18,20 +20,20 @@ from dnns.config import Config
 
 def getDNN(loader, args):
     sys.path.insert(1, os.getcwd())
-    try:
-        from dnn import DNN
-        if args.rank == 0:
-            print('Successfully imported your model.')
-    except:
-        if args.rank == 0:
-            print('Could not import your model. Exiting.')
-        exit(-1)
+    #try:
+    from dnn import DNN
+    #     if args.rank == 0:
+    #        print('Successfully imported your model.')
+    # except:
+    #    if args.rank == 0:
+    #        print('Could not import your model. Exiting.')
+    #    exit(-1)
     return DNN(loader.getXShape())
 
 def getModel(loader, config, args):
     model = getDNN(loader, args).cuda(args.local_rank)
     optimizer = torch.optim.Adam(model.parameters(), lr=config['learning_rate'])
-
+    optimizer = LARC(optimizer)
     if config['mixed_precision']:
         model, optimizer = amp.initialize(model, optimizer, opt_level='O2')
     
@@ -216,14 +218,14 @@ def main():
     checkpoint_path = args.checkpoint_path
 
     model, optimizer, start_epoch, loss_vs_epoch, best_val = tryToResume(model, optimizer, checkpoint_path, args)
-
+    # scheduler = ReduceLROnPlateau(optimizer, min_lr=1e-6, verbose=True)
     for epoch in range(start_epoch, config['n_epochs'] + 1):
         start = time.time()
         data.train_sampler.set_epoch(epoch)
         
         training_loss = train(training_set, model, optimizer, loss_fn, args, config)
         validation_loss = validate(testing_set, model, loss_fn, args, epoch, data.testShape())
-
+        # scheduler.step(validation_loss)
         if args.rank == 0:
             print('epoch: %3.0i | training loss: %0.3e | validation loss: %0.3e | time(s): %0.3e' %
                       (epoch, training_loss, validation_loss, time.time() - start))
