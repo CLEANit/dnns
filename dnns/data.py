@@ -335,30 +335,38 @@ class Data:
         self.config = config
         self.args = args
 
-        self.training_dataset = HDF5Dataset(
-            self.loader.getTrainingFiles()[0],
-            self.config['input_label'],
-            self.config['output_label'],
-            self.args.rank,
-            use_hist=self.config['use_hist']
-        )
+        self.training_datasets = []
+        for fname in self.loader.getTrainingFiles():
+            self.training_datasets.append(
+                HDF5Dataset(
+                    fname,
+                    self.config['input_label'],
+                    self.config['output_label'],
+                    self.args.rank,
+                    use_hist=self.config['use_hist']
+                    )
+            )
 
-        self.testing_dataset = HDF5Dataset(
-            self.loader.getTestingFiles()[0],
-            self.config['input_label'],
-            self.config['output_label'],
-            self.args.rank,
-            use_hist=False
-        )
+        self.testing_datasets = []
+        for fname in self.loader.getTestingFiles():
+            self.testing_datasets.append(
+                HDF5Dataset(
+                self.loader.getTestingFiles()[0],
+                self.config['input_label'],
+                self.config['output_label'],
+                self.args.rank,
+                use_hist=False
+                )
+            )
 
         self.train_sampler = torch.utils.data.distributed.DistributedSampler(
-            self.training_dataset,
+            torch.utils.data.ConcatDataset(self.training_datasets),
             num_replicas=self.args.world_size,
             rank=self.args.rank
         )
 
         self.test_sampler = torch.utils.data.distributed.DistributedSampler(
-            self.testing_dataset,
+            torch.utils.data.ConcatDataset(self.testing_datasets),
             num_replicas=self.args.world_size,
             rank=self.args.rank
         )
