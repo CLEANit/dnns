@@ -384,7 +384,7 @@ class Data:
         """
         if self.args.world_size > 1:
             return torch.utils.data.DataLoader(
-                self.training_dataset,
+                torch.utils.data.ConcatDataset(self.training_datasets),
                 batch_size=self.config['batch_size'],
                 shuffle=False,
                 num_workers=self.config['cpus_per_task'],
@@ -393,7 +393,7 @@ class Data:
             )
         else:
             return torch.utils.data.DataLoader(
-                self.training_dataset,
+                torch.utils.data.ConcatDataset(self.training_datasets),
                 batch_size=self.config['batch_size'],
                 shuffle=True,
                 num_workers=self.config['cpus_per_task']
@@ -408,7 +408,8 @@ class Data:
         A torch DataLoader.
         """
         if self.args.world_size > 1:
-            return torch.utils.data.DataLoader(self.testing_dataset,
+            return torch.utils.data.DataLoader(
+                torch.utils.data.ConcatDataset(self.testing_datasets),
                 batch_size=self.config['batch_size'],
                 shuffle=False,
                 num_workers=self.config['cpus_per_task'],
@@ -417,7 +418,7 @@ class Data:
             )
         else:
             return torch.utils.data.DataLoader(
-                self.testing_dataset,
+                torch.utils.data.ConcatDataset(self.testing_datasets),
                 batch_size=self.config['batch_size'],
                 shuffle=True,
                 num_workers=self.config['cpus_per_task']

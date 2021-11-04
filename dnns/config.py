@@ -25,7 +25,8 @@ class Config:
         self.config = {}
         self.config['cpus_per_task'] = 1
         self.config['batch_size'] = 128
-        self.config['learning_rate'] = 1e-3
+        self.config['learning_rate'] = 1e-4
+        self.config['l2_regularization'] = 0.
         self.config['input_label'] = 'X'
         self.config['output_label'] = 'Y'
         self.config['model'] = 'dnn.py'

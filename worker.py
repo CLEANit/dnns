@@ -32,15 +32,21 @@ def getDNN(loader, args):
 
 def getModel(loader, config, args):
     model = getDNN(loader, args).cuda(args.local_rank)
-    optimizer = torch.optim.Adam(model.parameters(), lr=config['learning_rate'])
+    optimizer = torch.optim.Adam(model.parameters(), lr=config['learning_rate'], weight_decay=config['l2_regularization'])
     optimizer = LARC(optimizer)
     if config['mixed_precision']:
         model, optimizer = amp.initialize(model, optimizer, opt_level='O2')
     
     if args.world_size > 1:
         model = DDP(model)
-
-    loss_fn = torch.nn.MSELoss().cuda()
+    sys.path.insert(1, os.getcwd())
+    try:
+        from dnn import loss_function
+        loss_fn = loss_function.cuda()
+        print('Imported custom loss function')
+    except:
+        print('Using MSELoss from pytorch')
+        loss_fn = torch.nn.MSELoss().cuda()
     return model, optimizer, loss_fn
 
 def train(training_set, model, optimizer, loss_fn, args, config):
@@ -231,12 +237,12 @@ def main():
                       (epoch, training_loss, validation_loss, time.time() - start))
             loss_vs_epoch.write('%10.20e\t%10.20e\t%10.20e\t%10.20e\n' % (epoch, training_loss, validation_loss, time.time() - start))
             loss_vs_epoch.flush()
-            checkpoint(epoch, model, optimizer, checkpoint_path, best_val, args.world_size, data.training_dataset.h5_file.attrs)
+            checkpoint(epoch, model, optimizer, checkpoint_path, best_val, args.world_size, data.training_datasets[0].h5_file.attrs)
 
             if validation_loss < best_val:
                 print('Better validation loss was found for epoch ' + str(epoch) + ', checkpointing to ' + os.path.join(checkpoint_path, 'best_checkpoint.torch'))
                 best_val = validation_loss
-                checkpoint(epoch, model, optimizer, checkpoint_path, best_val, args.world_size, data.training_dataset.h5_file.attrs, best=True)
+                checkpoint(epoch, model, optimizer, checkpoint_path, best_val, args.world_size, data.training_datasets[0].h5_file.attrs, best=True)
 
 if __name__ == '__main__':
     main()
